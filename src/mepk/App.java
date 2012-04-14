@@ -1,0 +1,119 @@
+package mepk;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+/**
+ * A constant-application expression. Instances are obtained through
+ * {@link Expression#asApp()}, for expressions which have been created through
+ * {@link Expression#App(String, Expression...)} and related methods.
+ */
+public class App implements Expression.Internal {
+
+	private final String constName;
+	private final Expression[] subexpressions;
+
+	App(String constName, Expression... subexpressions) {
+		this.constName = constName;
+		this.subexpressions = subexpressions;
+	}
+
+	/**
+	 * Returns the constant name of this constant-application expression.
+	 * 
+	 * @return the constant name of this expression
+	 */
+	public Object getConstName() {
+		return constName;
+	}
+
+	/**
+	 * Returns the subexpressions of this constant-application expression.
+	 * 
+	 * @return the subexpressions of this expression.
+	 */
+	public List<Expression> getSubexpressions() {
+		return Collections.unmodifiableList(Arrays.asList(subexpressions));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(subexpressions);
+		result = prime * result + ((constName == null) ? 0 : constName.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof App)) {
+			return false;
+		}
+		App other = (App) obj;
+		if (!Arrays.equals(subexpressions, other.subexpressions)) {
+			return false;
+		}
+		if (constName == null) {
+			if (other.constName != null) {
+				return false;
+			}
+		} else if (!constName.equals(other.constName)) {
+			return false;
+		}
+		return true;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuffer result = new StringBuffer();
+		result.append('(');
+		result.append(constName.isEmpty() ? "''" : constName);
+		for (Expression e : subexpressions) {
+			result.append(' ');
+			result.append(e.toString());
+		}
+		result.append(')');
+		return result.toString();
+	}
+
+	@Override
+	public void addVarNamesTo(Set<String> result) {
+		for (Expression e : subexpressions) {
+			e.addVarNamesTo(result);
+		}
+	}
+
+	@Override
+	public Expression.Internal substitute(String varName, Expression.Internal replacement) {
+		List<Expression> es = new ArrayList<Expression>();
+		for (Expression e : subexpressions) {
+			es.add(e.substitute(varName, replacement));
+		}
+		return new App(constName, es.toArray(new Expression[es.size()]));
+	}
+}
