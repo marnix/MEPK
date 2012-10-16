@@ -45,5 +45,3 @@ Implementation issues:
    -> getGroundingTheory()?  Con: The current names are short, and that is good.
    
  - Implement a non-recursive version of the verification mechanism, to prevent stack overflow.
- 
- - Make ProofStep instanceof Proof (after renaming ProofStep#getGrounded() to getGrounded1())?

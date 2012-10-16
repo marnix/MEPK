@@ -39,7 +39,7 @@ public class Weaken implements ProofStep.Internal {
 	}
 
 	@Override
-	public Statement getGrounded() {
+	public Statement getGrounded1() {
 		return result;
 	}
 

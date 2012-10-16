@@ -32,7 +32,7 @@ public class Test1 {
 		Statement s = Stat(Arrays.asList(Expression.Type("P", "bool"), Var("P")), Var("P"));
 		ProofStep p = ProofStep.Substitute(s, "P", Var("Q"), Types.EmptyMap());
 		Statement expected = Stat(Arrays.asList(Expression.Type("Q", "bool"), Var("Q")), Var("Q"));
-		assertEquals(expected, p.getGrounded());
+		assertEquals(expected, p.getGrounded1());
 	}
 
 	@Test
@@ -42,7 +42,7 @@ public class Test1 {
 		Statement expected = Stat(
 				Arrays.asList(Expression.Type("Q", "bool"), Expression.Type("R", "bool"),
 						Expression.Type(AppV("and", "Q", "R"), "bool"), AppV("and", "Q", "R")), AppV("and", "Q", "R"));
-		assertEquals(expected, p.getGrounded());
+		assertEquals(expected, p.getGrounded1());
 	}
 
 	@Test
@@ -120,7 +120,7 @@ public class Test1 {
 		ProofStep w = ProofStep.Weaken(sp, DVRSet.EMPTY, Expression.Type("Q", "bool"), Var("Q"));
 
 		assertEquals(Collections.singleton(sp), w.getGrounding());
-		assertEquals(spq, w.getGrounded());
+		assertEquals(spq, w.getGrounded1());
 
 		Proof ti = TrustedProof.From(w);
 

@@ -41,7 +41,7 @@ public class Substitute implements ProofStep.Internal {
 	}
 
 	@Override
-	public Statement getGrounded() {
+	public Statement getGrounded1() {
 		return result;
 	}
 }

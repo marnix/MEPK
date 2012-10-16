@@ -33,7 +33,7 @@ public class SingleStepProof implements TrustedProof.Internal {
 
 	@Override
 	public Set<Statement> getGrounded() {
-		return Collections.singleton(proofStep.getGrounded());
+		return Collections.singleton(proofStep.getGrounded1());
 	}
 
 	@Override

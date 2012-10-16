@@ -12,7 +12,7 @@ import mepk.internal.Weaken;
  * after they have been created. It is only possible to create an instance using
  * the static methods in this class.
  */
-public final class ProofStep {
+public final class ProofStep extends Proof {
 
 	/** An internal version of a {@link ProofStep}. */
 	public interface Internal {
@@ -28,7 +28,7 @@ public final class ProofStep {
 		 * 
 		 * @return the grounded statement
 		 */
-		Statement getGrounded();
+		Statement getGrounded1();
 	}
 
 	/**
@@ -89,8 +89,18 @@ public final class ProofStep {
 	 * 
 	 * @return the grounded statement
 	 */
-	public Statement getGrounded() {
-		return internalProofStep.getGrounded();
+	public Statement getGrounded1() {
+		return internalProofStep.getGrounded1();
+	}
+
+	@Override
+	public Set<Statement> getGrounded() {
+		return TrustedProof.From(this).getGrounded();
+	}
+
+	@Override
+	public Justification getJustificationFor(Statement statement) {
+		return TrustedProof.From(this).getJustificationFor(statement);
 	}
 
 }
