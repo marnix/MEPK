@@ -40,9 +40,11 @@ public final class Expression {
 		 *            the variable to replace
 		 * @param replacement
 		 *            the replacement expression
+		 * @param wrapper
+		 *            TODO
 		 * @return the new expression
 		 */
-		public Expression.Internal substitute(String varName, Expression.Internal replacement);
+		public Expression substitute(String varName, Expression.Internal replacement, Wrapper wrapper);
 
 		/**
 		 * Find all variable names in this expression, and add them to the given
@@ -52,6 +54,20 @@ public final class Expression {
 		 *            the accumulating set
 		 */
 		public void addVarNamesTo(Set<String> result);
+	}
+
+	public interface Wrapper {
+		public Expression wrap(Internal internalExpression);
+	}
+
+	private static final Expression.Wrapper WRAPPER = new WrapperImpl();
+
+	private static class WrapperImpl implements Wrapper {
+		@Override
+		public Expression wrap(Internal internalExpression) {
+			return new Expression(internalExpression);
+		}
+	
 	}
 
 	/**
@@ -223,6 +239,10 @@ public final class Expression {
 		return internalExpression.toString();
 	}
 
+	public Expression.Internal getInternalExpression() {
+		return internalExpression;
+	}
+
 	/**
 	 * Return all variables in this expression.
 	 * 
@@ -264,21 +284,7 @@ public final class Expression {
 	 * @return the new expression
 	 */
 	public Expression substitute(String varName, Expression replacement) {
-		return substitute(varName, replacement.internalExpression);
-	}
-
-	/**
-	 * Create a new expression by replacing a variable by an internal
-	 * expression.
-	 * 
-	 * @param varName
-	 *            the variable to replace
-	 * @param replacement
-	 *            the replacement expression
-	 * @return the new expression
-	 */
-	public Expression substitute(String varName, Expression.Internal replacement) {
-		return new Expression(internalExpression.substitute(varName, replacement));
+		return internalExpression.substitute(varName, replacement.internalExpression, WRAPPER);
 	}
 
 	/**

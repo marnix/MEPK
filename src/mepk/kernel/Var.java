@@ -2,6 +2,8 @@ package mepk.kernel;
 
 import java.util.Set;
 
+import mepk.kernel.Expression.Wrapper;
+
 /**
  * A variable expression. Instances are obtained through
  * {@link Expression#asVar()}, for expressions which have been created through
@@ -75,12 +77,8 @@ public class Var implements Expression.Internal {
 	}
 
 	@Override
-	public Expression.Internal substitute(String varName, Expression.Internal replacement) {
-		if (this.varName.equals(varName)) {
-			return replacement;
-		} else {
-			return this;
-		}
+	public Expression substitute(String varName, Expression.Internal replacement, Wrapper wrapper) {
+		return wrapper.wrap(this.varName.equals(varName) ? replacement : this);
 	}
 
 	@Override
