@@ -4,7 +4,6 @@ import java.util.Set;
 
 import mepk.internal.ParProof;
 import mepk.internal.SeqProof;
-import mepk.internal.SingleStepProof;
 import mepk.internal.TrivialProof;
 
 /**
@@ -47,17 +46,6 @@ public final class TrustedProof extends Proof {
 		 *         prerequisites of the proof step.
 		 */
 		Justification getJustificationFor(Statement statement);
-	}
-
-	/**
-	 * Create a single-step proof from the given ProofStep.
-	 * 
-	 * @param p
-	 *            the ProofStep
-	 * @return the created proof
-	 */
-	public static Proof From(ProofStep p) {
-		return new TrustedProof(new SingleStepProof(p));
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package mepk;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -13,6 +14,31 @@ import mepk.internal.Weaken;
  * the static methods in this class.
  */
 public final class ProofStep extends Proof {
+
+	private static final class TrivialProof extends Proof {
+
+		private final Set<Statement> statements;
+
+		public TrivialProof(Set<Statement> statements) {
+			this.statements = statements;
+		}
+
+		@Override
+		public Set<Statement> getGrounding() {
+			return statements;
+		}
+
+		@Override
+		public Set<Statement> getGrounded() {
+			return getGrounding();
+		}
+
+		@Override
+		public Justification getJustificationFor(Statement statement) {
+			return null;
+		}
+
+	}
 
 	/** An internal version of a {@link ProofStep}. */
 	public interface Internal {
@@ -80,6 +106,7 @@ public final class ProofStep extends Proof {
 	 * 
 	 * @return the grounding statements
 	 */
+	@Override
 	public Set<Statement> getGrounding() {
 		return internalProofStep.getGrounding();
 	}
@@ -95,12 +122,12 @@ public final class ProofStep extends Proof {
 
 	@Override
 	public Set<Statement> getGrounded() {
-		return TrustedProof.From(this).getGrounded();
+		return Collections.singleton(getGrounded1());
 	}
 
 	@Override
 	public Justification getJustificationFor(Statement statement) {
-		return TrustedProof.From(this).getJustificationFor(statement);
+		return new Justification(this, new TrivialProof(getGrounding()));
 	}
 
 }
