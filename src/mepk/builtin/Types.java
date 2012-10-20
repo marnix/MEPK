@@ -1,6 +1,8 @@
-package mepk;
+package mepk.builtin;
 
 import java.util.LinkedHashMap;
+
+import mepk.kernel.Expression;
 
 /**
  * A helper class for easily creating a {@code Map<String,Expression>}, which

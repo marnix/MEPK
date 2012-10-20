@@ -1,7 +1,7 @@
 package mepk.test;
 
-import static mepk.Expression.*;
-import static mepk.Statement.*;
+import static mepk.kernel.Expression.*;
+import static mepk.kernel.Statement.*;
 import static mepk.test.AssertUtil.*;
 import static org.junit.Assert.*;
 
@@ -10,15 +10,15 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import mepk.DVRSet;
-import mepk.Expression;
-import mepk.Justification;
-import mepk.MEPKException;
-import mepk.Proof;
-import mepk.ProofStep;
-import mepk.Statement;
-import mepk.TrustedProof;
-import mepk.Types;
+import mepk.builtin.TrustedProof;
+import mepk.builtin.Types;
+import mepk.kernel.DVRSet;
+import mepk.kernel.Expression;
+import mepk.kernel.Justification;
+import mepk.kernel.MEPKException;
+import mepk.kernel.Proof;
+import mepk.kernel.ProofStep;
+import mepk.kernel.Statement;
 
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ public class Test1 {
 	public void test1() {
 		Statement s = Stat(Arrays.asList(Expression.Type("P", "bool"), Var("P")), Var("P"));
 		ProofStep p = ProofStep.Substitute(s, "P", Var("Q"), Types.EmptyMap());
-		Statement expected = Stat(Arrays.asList(Expression.Type("Q", "bool"), Var("Q")), Var("Q"));
+		Set<Statement> expected = Collections.singleton(Stat(Arrays.asList(Expression.Type("Q", "bool"), Var("Q")), Var("Q")));
 		assertEquals(expected, p.getGrounded());
 	}
 
@@ -39,9 +39,9 @@ public class Test1 {
 	public void test2() {
 		Statement s = Stat(Arrays.asList(Expression.Type("P", "bool"), Var("P")), Var("P"));
 		ProofStep p = ProofStep.Substitute(s, "P", AppV("and", "Q", "R"), Types.map("Q", "bool").map("R", "bool"));
-		Statement expected = Stat(
+		Set<Statement> expected = Collections.singleton(Stat(
 				Arrays.asList(Expression.Type("Q", "bool"), Expression.Type("R", "bool"),
-						Expression.Type(AppV("and", "Q", "R"), "bool"), AppV("and", "Q", "R")), AppV("and", "Q", "R"));
+						Expression.Type(AppV("and", "Q", "R"), "bool"), AppV("and", "Q", "R")), AppV("and", "Q", "R")));
 		assertEquals(expected, p.getGrounded());
 	}
 
@@ -59,13 +59,12 @@ public class Test1 {
 	public void test4() throws Throwable {
 		Statement sp = Stat(Arrays.asList(Expression.Type("P", "bool"), Var("P")), Var("P"));
 		ProofStep p = ProofStep.Substitute(sp, "P", Var("Q"), Types.EmptyMap());
-		Proof ti = TrustedProof.From(p);
 
-		assertEquals(Collections.singleton(sp), ti.getGrounding());
+		assertEquals(Collections.singleton(sp), p.getGrounding());
 		Statement sq = Stat(Arrays.asList(Expression.Type("Q", "bool"), Var("Q")), Var("Q"));
-		assertEquals(Collections.singleton(sq), ti.getGrounded());
+		assertEquals(Collections.singleton(sq), p.getGrounded());
 
-		ti.verify();
+		p.verify();
 	}
 
 	@Test
@@ -74,7 +73,7 @@ public class Test1 {
 		Statement sq = Stat(Arrays.asList(Expression.Type("Q", "bool"), Var("Q")), Var("Q"));
 		ProofStep pq = ProofStep.Substitute(sp, "P", Var("Q"), Types.EmptyMap());
 		ProofStep qr = ProofStep.Substitute(sq, "Q", Var("R"), Types.EmptyMap());
-		Proof ti = TrustedProof.Seq(TrustedProof.From(pq), TrustedProof.From(qr));
+		Proof ti = TrustedProof.Seq(pq, qr);
 
 		assertEquals(Collections.singleton(sp), ti.getGrounding());
 		Statement sr = Stat(Arrays.asList(Expression.Type("R", "bool"), Var("R")), Var("R"));
@@ -91,7 +90,7 @@ public class Test1 {
 		ProofStep pq = ProofStep.Substitute(sp, "P", Var("Q"), Types.EmptyMap());
 		ProofStep qr = ProofStep.Substitute(sq, "Q", Var("R"), Types.EmptyMap());
 		ProofStep rs = ProofStep.Substitute(sr, "R", Var("S"), Types.EmptyMap());
-		Proof ti = TrustedProof.Seq(TrustedProof.Seq(TrustedProof.From(pq), TrustedProof.From(qr)), TrustedProof.From(rs));
+		Proof ti = TrustedProof.Seq(TrustedProof.Seq(pq, qr), rs);
 
 		ti.verify();
 	}
@@ -105,10 +104,10 @@ public class Test1 {
 		ProofStep qr = ProofStep.Substitute(sq, "Q", Var("R"), Types.EmptyMap());
 		ProofStep rs = ProofStep.Substitute(sr, "R", Var("S"), Types.EmptyMap());
 
-		Proof ti = TrustedProof.Seq(TrustedProof.From(pq), TrustedProof.Seq(TrustedProof.From(qr), TrustedProof.From(rs)));
+		Proof ti = TrustedProof.Seq(pq, TrustedProof.Seq(qr, rs));
 		ti.verify();
 
-		Proof ti2 = TrustedProof.Seq(TrustedProof.Seq(TrustedProof.From(pq), TrustedProof.From(qr)), TrustedProof.From(rs));
+		Proof ti2 = TrustedProof.Seq(TrustedProof.Seq(pq, qr), rs);
 		ti2.verify();
 	}
 
@@ -120,14 +119,9 @@ public class Test1 {
 		ProofStep w = ProofStep.Weaken(sp, DVRSet.EMPTY, Expression.Type("Q", "bool"), Var("Q"));
 
 		assertEquals(Collections.singleton(sp), w.getGrounding());
-		assertEquals(spq, w.getGrounded());
+		assertEquals(Collections.singleton(spq), w.getGrounded());
 
-		Proof ti = TrustedProof.From(w);
-
-		assertEquals(Collections.singleton(sp), ti.getGrounding());
-		assertEquals(Collections.singleton(spq), ti.getGrounded());
-
-		ti.verify();
+		w.verify();
 	}
 
 	@SuppressWarnings("unused")

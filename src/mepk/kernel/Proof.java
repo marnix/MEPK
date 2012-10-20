@@ -1,4 +1,4 @@
-package mepk;
+package mepk.kernel;
 
 import java.util.Set;
 
@@ -71,9 +71,9 @@ public abstract class Proof {
 			} else {
 				Proof ti2 = justification.getProof();
 				ProofStep proofStep = justification.getProofStep();
-				if (!proofStep.getGrounded().equals(s)) {
+				if (!proofStep.getGrounded1().equals(s)) {
 					throw new VerificationException("incorrect justification for " + s + ": justifying proof step should conclude "
-							+ s + " but did conclude " + proofStep.getGrounded());
+							+ s + " but did conclude " + proofStep.getGrounded1());
 				}
 				if (!ti2.getGrounded().containsAll(proofStep.getGrounding())) {
 					throw new VerificationException("incorrect justification for " + s

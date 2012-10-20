@@ -1,11 +1,11 @@
 package mepk.test;
 
-import static mepk.Expression.*;
+import static mepk.kernel.Expression.*;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
 
-import mepk.Expression;
+import mepk.kernel.Expression;
 
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;

@@ -1,4 +1,4 @@
-package mepk;
+package mepk.kernel;
 
 /**
  * This exception indicates that a {@link Proof} did not {@link Proof#verify()}

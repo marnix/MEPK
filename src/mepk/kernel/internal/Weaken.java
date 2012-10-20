@@ -1,12 +1,12 @@
-package mepk.internal;
+package mepk.kernel.internal;
 
 import java.util.Collections;
 import java.util.Set;
 
-import mepk.DVRSet;
-import mepk.Expression;
-import mepk.ProofStep;
-import mepk.Statement;
+import mepk.kernel.DVRSet;
+import mepk.kernel.Expression;
+import mepk.kernel.ProofStep;
+import mepk.kernel.Statement;
 
 /**
  * A weakening proof step constructs a new statement by adding DVRs and/or

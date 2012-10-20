@@ -1,10 +1,11 @@
-package mepk;
+package mepk.kernel;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import mepk.internal.Substitute;
-import mepk.internal.Weaken;
+import mepk.kernel.internal.Substitute;
+import mepk.kernel.internal.Weaken;
 
 /**
  * A proof step is the smallest step in a proof: it shows how to create a new
@@ -12,7 +13,7 @@ import mepk.internal.Weaken;
  * after they have been created. It is only possible to create an instance using
  * the static methods in this class.
  */
-public final class ProofStep {
+public final class ProofStep extends Proof {
 
 	/** An internal version of a {@link ProofStep}. */
 	public interface Internal {
@@ -29,6 +30,36 @@ public final class ProofStep {
 		 * @return the grounded statement
 		 */
 		Statement getGrounded();
+	}
+
+	/**
+	 * This class represents the trivial proof that from statements S one can
+	 * construct statements S. It is used in the implementation of
+	 * {@link #getJustificationFor(Statement)}.
+	 */
+	private static final class TrivialProof extends Proof {
+
+		private final Set<Statement> statements;
+
+		public TrivialProof(Set<Statement> statements) {
+			this.statements = statements;
+		}
+
+		@Override
+		public Set<Statement> getGrounding() {
+			return statements;
+		}
+
+		@Override
+		public Set<Statement> getGrounded() {
+			return statements;
+		}
+
+		@Override
+		public Justification getJustificationFor(Statement statement) {
+			return null;
+		}
+
 	}
 
 	/**
@@ -80,6 +111,7 @@ public final class ProofStep {
 	 * 
 	 * @return the grounding statements
 	 */
+	@Override
 	public Set<Statement> getGrounding() {
 		return internalProofStep.getGrounding();
 	}
@@ -89,8 +121,22 @@ public final class ProofStep {
 	 * 
 	 * @return the grounded statement
 	 */
-	public Statement getGrounded() {
+	public Statement getGrounded1() {
 		return internalProofStep.getGrounded();
+	}
+
+	@Override
+	public Set<Statement> getGrounded() {
+		return Collections.singleton(getGrounded1());
+	}
+
+	@Override
+	public Justification getJustificationFor(Statement statement) {
+		assert getGrounded().contains(statement);
+		Justification justification = new Justification(this, new TrivialProof(getGrounding()));
+		assert justification.getProof().getGrounded().containsAll(justification.getProofStep().getGrounding());
+		return justification;
+
 	}
 
 }

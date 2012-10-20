@@ -1,12 +1,12 @@
-package mepk.internal;
+package mepk.builtin.internal;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import mepk.Justification;
-import mepk.Proof;
-import mepk.Statement;
-import mepk.TrustedProof;
+import mepk.builtin.TrustedProof;
+import mepk.kernel.Justification;
+import mepk.kernel.Proof;
+import mepk.kernel.Statement;
 
 /**
  * A 'sequential proof' merges two proofs 'in sequence', where the second proof

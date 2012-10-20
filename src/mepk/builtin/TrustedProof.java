@@ -1,14 +1,16 @@
-package mepk;
+package mepk.builtin;
 
 import java.util.Set;
 
-import mepk.internal.ParProof;
-import mepk.internal.SeqProof;
-import mepk.internal.SingleStepProof;
-import mepk.internal.TrivialProof;
+import mepk.builtin.internal.ParProof;
+import mepk.builtin.internal.SeqProof;
+import mepk.builtin.internal.TrivialProof;
+import mepk.kernel.Justification;
+import mepk.kernel.Proof;
+import mepk.kernel.Statement;
 
 /**
- * A trusted proof is a {@link Proof} which is part of the trusted proof kernel.
+ * A trusted proof is a {@link Proof} which is built on the trusted kernel.
  * Trusted proofs are values: they cannot be modified after they have been
  * created. It is only possible to create an instance using the static methods
  * in this class.
@@ -47,17 +49,6 @@ public final class TrustedProof extends Proof {
 		 *         prerequisites of the proof step.
 		 */
 		Justification getJustificationFor(Statement statement);
-	}
-
-	/**
-	 * Create a single-step proof from the given ProofStep.
-	 * 
-	 * @param p
-	 *            the ProofStep
-	 * @return the created proof
-	 */
-	public static Proof From(ProofStep p) {
-		return new TrustedProof(new SingleStepProof(p));
 	}
 
 	/**
