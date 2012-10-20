@@ -37,6 +37,9 @@ To-do list for functionality:
    Open issue: can these features be used to create a proof "the positive reals form a
    group"?  I think they can, if we also have a 'hypothesis' proof step, which
    grounds any statement whose conclusion is identical to one of it hypotheses.
+   
+   Alternative design: Instead of an 'abbreviate' proof step, have an 'abbreviate'
+   _proof_.  This puts abbreviations outside of the mepk.kernel, and Minimal is Good (TM).
 
 
 Implementation issues:
