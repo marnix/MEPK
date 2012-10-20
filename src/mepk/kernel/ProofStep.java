@@ -1,11 +1,11 @@
-package mepk;
+package mepk.kernel;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import mepk.internal.Substitute;
-import mepk.internal.Weaken;
+import mepk.kernel.internal.Substitute;
+import mepk.kernel.internal.Weaken;
 
 /**
  * A proof step is the smallest step in a proof: it shows how to create a new

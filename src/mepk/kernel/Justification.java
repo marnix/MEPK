@@ -1,4 +1,4 @@
-package mepk;
+package mepk.kernel;
 
 /**
  * A justification gives a {@link ProofStep} that constructs a statement, and a

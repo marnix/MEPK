@@ -2,6 +2,6 @@
 <project default="javadoc">
 	<target name="javadoc">
 		<delete dir="doc" />
-		<javadoc access="protected" author="true" classpath="lib/jackson-all-1.9.0.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="mepk" source="1.6" sourcepath="src" splitindex="false" use="true" version="true" />
+		<javadoc access="protected" author="true" classpath="lib/jackson-all-1.9.0.jar" destdir="doc" nodeprecated="false" nodeprecatedlist="false" noindex="false" nonavbar="false" notree="false" packagenames="mepk,mepk.kernel,mepk.builtin" source="1.6" sourcepath="src" splitindex="false" use="true" version="true" />
 	</target>
 </project>

@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import java.util.Arrays;
 
-import mepk.DVRSet;
-import mepk.MEPKException;
+import mepk.kernel.DVRSet;
+import mepk.kernel.MEPKException;
 
 import org.junit.Test;
 

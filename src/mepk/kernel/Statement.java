@@ -1,6 +1,6 @@
-package mepk;
+package mepk.kernel;
 
-import static mepk.Expression.*;
+import static mepk.kernel.Expression.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;

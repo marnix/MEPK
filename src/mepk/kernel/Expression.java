@@ -1,4 +1,4 @@
-package mepk;
+package mepk.kernel;
 
 import java.io.IOException;
 import java.util.ArrayList;

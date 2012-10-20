@@ -1,7 +1,7 @@
 package mepk.test;
 
-import static mepk.Expression.*;
-import static mepk.Statement.*;
+import static mepk.kernel.Expression.*;
+import static mepk.kernel.Statement.*;
 import static mepk.test.AssertUtil.*;
 import static org.junit.Assert.*;
 
@@ -10,15 +10,15 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import mepk.DVRSet;
-import mepk.Expression;
-import mepk.Justification;
-import mepk.MEPKException;
-import mepk.Proof;
-import mepk.ProofStep;
-import mepk.Statement;
-import mepk.TrustedProof;
-import mepk.Types;
+import mepk.builtin.TrustedProof;
+import mepk.builtin.Types;
+import mepk.kernel.DVRSet;
+import mepk.kernel.Expression;
+import mepk.kernel.Justification;
+import mepk.kernel.MEPKException;
+import mepk.kernel.Proof;
+import mepk.kernel.ProofStep;
+import mepk.kernel.Statement;
 
 import org.junit.Test;
 

@@ -1,12 +1,12 @@
-package mepk.internal;
+package mepk.kernel.internal;
 
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import mepk.Expression;
-import mepk.ProofStep;
-import mepk.Statement;
+import mepk.kernel.Expression;
+import mepk.kernel.ProofStep;
+import mepk.kernel.Statement;
 
 /**
  * A substitution proof step takes a statement, and constructs a structurally

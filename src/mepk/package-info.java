@@ -1,5 +1,5 @@
 /**
- * This package implements a minimal extensible proof kernel, with a Metamath/Ghilbert-like
+ * This package implements MEPK, a minimal extensible proof kernel, with a Metamath/Ghilbert-like
  * language.
  * <p>
  * It is a <i>proof kernel</i>, i.e., a trusted core to create Java objects representing
@@ -7,26 +7,14 @@
  * using this core alone.  It is <i>extensible</i>, so that it is possible (probably for
  * reasons of performance) to create the same proofs through new mechanisms.
  * <p>
- * The basic building block is a {@link mepk.Statement}, representing statements like "for every
- * natural number n, n &gt;= 0". Any syntactically correct statement can be constructed, and
- * statements represent both axioms and theorems.
- * Then a {@link mepk.ProofStep} shows how to construct new statements from
- * existing statements: there are only a few built-in proof steps (substitute, compose, weaken)
- * and none can be added.
- * Finally a {@link mepk.Proof} represents a recipe for constructing one set of
- * statements for another using only ProofSteps.
- * <p>
- * The language of statements and their {@link mepk.Expression expressions} is that of Ghilbert,
- * but using Metamath's philosophy of types:
- * expressions are trees of constants and variables;
- * statements have hypotheses
- * and a conclusion; 
- * and dummy variables are handled using 'distinct variable restrictions'.
- * <p>
- * Every Proof can be verified mechanically by asking it to justify each of its
- * statements.  It should then provide a ProofStep which constructs that statement,
- * together with Proofs for the prerequisites of that ProofStep.
- * <p>
- * A {@link mepk.TrustedProof} is a Proof which is part of the trusted kernel.
+ * The trusted kernel is the {@link mepk.kernel} package (with its subpackages):
+ * all other proofs, including those in {@link mepk.builtin}, are built on top of that kernel, and
+ * each proof can be verified using {@link mepk.kernel.Proof#verify()}.
+ * <p> 
+ * The {@link mepk.builtin} package contains some basic proofs and proof combinators.
+ * The entry point is {@link mepk.builtin.TrustedProof}.
+ * The code was carefully designed to make sure that {@link mepk.kernel.Proof#verify()}
+ * always succeeds for a {@code TrustedProof};
+ * but in case of doubt you can always {@code verify()} that. 
  */
 package mepk;
