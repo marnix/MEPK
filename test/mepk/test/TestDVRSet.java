@@ -41,4 +41,17 @@ public class TestDVRSet {
 			AssertUtil.assertTrueElseException(e.getMessage().contains("Variable 'y' may not be disjoint with itself"), e);
 		}
 	}
+
+	@Test
+	public void testEquals() {
+		DVRSet d1 = DVRSet.EMPTY.add("x", "y");
+		DVRSet d2 = DVRSet.EMPTY.add("x", "y");
+		DVRSet d3 = DVRSet.EMPTY.add("y", "x");
+		assertTrue(d1.equals(d2));
+		assertTrue(d1.equals(d3));
+		assertTrue(d2.equals(d1));
+		assertTrue(d2.equals(d3));
+		assertTrue(d3.equals(d1));
+		assertTrue(d3.equals(d2));
+	}
 }

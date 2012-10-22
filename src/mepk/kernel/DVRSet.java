@@ -12,8 +12,6 @@ import java.util.Set;
  * only if) they have the same structure. It is only possible to create
  * instances using the methods in this class.
  */
-// TODO: Implement class DVRSet; currently only the empty set has been
-// implemented...
 public final class DVRSet {
 
 	/** The empty DVRSet. */
@@ -23,6 +21,36 @@ public final class DVRSet {
 
 	private DVRSet(Map<String, Set<String>> dvrMap) {
 		this.dvrMap = dvrMap;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((dvrMap == null) ? 0 : dvrMap.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (!(obj instanceof DVRSet)) {
+			return false;
+		}
+		DVRSet other = (DVRSet) obj;
+		if (dvrMap == null) {
+			if (other.dvrMap != null) {
+				return false;
+			}
+		} else if (!dvrMap.equals(other.dvrMap)) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
@@ -85,6 +113,4 @@ public final class DVRSet {
 		// create a new set
 		return new DVRSet(newDVRMap);
 	}
-
-	// TODO: Add hashCode() and equals() and toString()
 }
