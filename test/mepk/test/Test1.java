@@ -73,13 +73,13 @@ public class Test1 {
 		Statement sq = Stat(Arrays.asList(Expression.Type("Q", "bool"), Var("Q")), Var("Q"));
 		ProofStep pq = ProofStep.Substitute(sp, "P", Var("Q"), Types.EmptyMap());
 		ProofStep qr = ProofStep.Substitute(sq, "Q", Var("R"), Types.EmptyMap());
-		Proof ti = TrustedProof.Seq(pq, qr);
+		Proof pr = TrustedProof.Seq(pq, qr);
 
-		assertEquals(Collections.singleton(sp), ti.getGrounding());
+		assertEquals(Collections.singleton(sp), pr.getGrounding());
 		Statement sr = Stat(Arrays.asList(Expression.Type("R", "bool"), Var("R")), Var("R"));
-		assertEquals(new HashSet<Statement>(Arrays.asList(sq, sr)), ti.getGrounded());
+		assertEquals(new HashSet<Statement>(Arrays.asList(sq, sr)), pr.getGrounded());
 
-		ti.verify();
+		pr.verify();
 	}
 
 	@Test
@@ -90,9 +90,9 @@ public class Test1 {
 		ProofStep pq = ProofStep.Substitute(sp, "P", Var("Q"), Types.EmptyMap());
 		ProofStep qr = ProofStep.Substitute(sq, "Q", Var("R"), Types.EmptyMap());
 		ProofStep rs = ProofStep.Substitute(sr, "R", Var("S"), Types.EmptyMap());
-		Proof ti = TrustedProof.Seq(TrustedProof.Seq(pq, qr), rs);
+		Proof ps = TrustedProof.Seq(TrustedProof.Seq(pq, qr), rs);
 
-		ti.verify();
+		ps.verify();
 	}
 
 	@Test
@@ -104,11 +104,11 @@ public class Test1 {
 		ProofStep qr = ProofStep.Substitute(sq, "Q", Var("R"), Types.EmptyMap());
 		ProofStep rs = ProofStep.Substitute(sr, "R", Var("S"), Types.EmptyMap());
 
-		Proof ti = TrustedProof.Seq(pq, TrustedProof.Seq(qr, rs));
-		ti.verify();
+		Proof ps1 = TrustedProof.Seq(pq, TrustedProof.Seq(qr, rs));
+		ps1.verify();
 
-		Proof ti2 = TrustedProof.Seq(TrustedProof.Seq(pq, qr), rs);
-		ti2.verify();
+		Proof ps2 = TrustedProof.Seq(TrustedProof.Seq(pq, qr), rs);
+		ps2.verify();
 	}
 
 	@Test
@@ -126,16 +126,16 @@ public class Test1 {
 	}
 
 	@SuppressWarnings("unused")
-	private void verifyTIStatementsToBasis(Proof ti, Set<Statement> statements, Set<Statement> baseStatements) {
-		assertTrue(ti.getGrounded().containsAll(statements));
+	private void verifyTIStatementsToBasis(Proof proof, Set<Statement> statements, Set<Statement> baseStatements) {
+		assertTrue(proof.getGrounded().containsAll(statements));
 		for (Statement s : statements) {
-			Justification justification = ti.getJustificationFor(s);
+			Justification justification = proof.getJustificationFor(s);
 			if (justification == null) {
 				assertTrue(baseStatements.contains(s));
 			} else {
 				ProofStep proofStep = justification.getProofStep();
-				Proof ti2 = justification.getProof();
-				verifyTIStatementsToBasis(ti2, proofStep.getGrounding(), baseStatements);
+				Proof subproof = justification.getProof();
+				verifyTIStatementsToBasis(subproof, proofStep.getGrounding(), baseStatements);
 			}
 		}
 	}

@@ -14,49 +14,49 @@ import mepk.kernel.Statement;
  */
 public class SeqProof implements TrustedProof.Internal {
 
-	private Proof ti1;
-	private Proof ti2;
+	private Proof proof1;
+	private Proof proof2;
 
 	/**
 	 * Create an instance from two proofs.
 	 * 
-	 * @param ti1
+	 * @param proof1
 	 *            the first proof
-	 * @param ti2
+	 * @param proof2
 	 *            the second proof
 	 */
-	public SeqProof(Proof ti1, Proof ti2) {
+	public SeqProof(Proof proof1, Proof proof2) {
 
-		Set<Statement> cnob = new HashSet<Statement>();
-		cnob.addAll(ti2.getGrounding());
-		cnob.removeAll(ti1.getGrounded());
+		Set<Statement> proof2GroundingWithoutProof1 = new HashSet<Statement>();
+		proof2GroundingWithoutProof1.addAll(proof2.getGrounding());
+		proof2GroundingWithoutProof1.removeAll(proof1.getGrounded());
 
-		this.ti1 = TrustedProof.Par(ti1, TrustedProof.Trivial(cnob));
-		this.ti2 = TrustedProof.Par(ti2, TrustedProof.Trivial(ti1.getGrounded()));
+		this.proof1 = TrustedProof.Par(proof1, TrustedProof.Trivial(proof2GroundingWithoutProof1));
+		this.proof2 = TrustedProof.Par(proof2, TrustedProof.Trivial(proof1.getGrounded()));
 
-		assert this.ti1.getGrounded().equals(this.ti2.getGrounding());
+		assert this.proof1.getGrounded().equals(this.proof2.getGrounding());
 	}
 
 	@Override
 	public Set<Statement> getGrounding() {
-		return ti1.getGrounding();
+		return proof1.getGrounding();
 	}
 
 	@Override
 	public Set<Statement> getGrounded() {
 		Set<Statement> result = new HashSet<Statement>();
-		result.addAll(ti1.getGrounded());
-		result.addAll(ti2.getGrounded());
+		result.addAll(proof1.getGrounded());
+		result.addAll(proof2.getGrounded());
 		return result;
 	}
 
 	@Override
 	public Justification getJustificationFor(Statement statement) {
-		Justification ti2Justification = ti2.getJustificationFor(statement);
+		Justification ti2Justification = proof2.getJustificationFor(statement);
 		if (ti2Justification != null) {
-			return new Justification(ti2Justification.getProofStep(), TrustedProof.Seq(ti1, ti2Justification.getProof()));
+			return new Justification(ti2Justification.getProofStep(), TrustedProof.Seq(proof1, ti2Justification.getProof()));
 		} else {
-			return ti1.getJustificationFor(statement);
+			return proof1.getJustificationFor(statement);
 		}
 	}
 }

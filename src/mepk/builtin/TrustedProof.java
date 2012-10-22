@@ -68,31 +68,31 @@ public final class TrustedProof extends Proof {
 	 * Merge two proofs 'in parallel', so that the new proof just collects
 	 * everything which the two parts prove.
 	 * 
-	 * @param ti1
+	 * @param proof1
 	 *            one proof
-	 * @param ti2
+	 * @param proof2
 	 *            another proof
 	 * @return the created proof
 	 */
-	public static Proof Par(Proof ti1, Proof ti2) {
-		return new TrustedProof(new ParProof(ti1, ti2));
+	public static Proof Par(Proof proof1, Proof proof2) {
+		return new TrustedProof(new ParProof(proof1, proof2));
 	}
 
 	/**
 	 * Merge two proofs 'in sequence', where the second proof builds on the
 	 * second one.
 	 * 
-	 * @param ti1
+	 * @param proof1
 	 *            the first proof
-	 * @param ti2
+	 * @param proof2
 	 *            the second proof
 	 * @return the created proof
 	 */
-	public static Proof Seq(Proof ti1, Proof ti2) {
+	public static Proof Seq(Proof proof1, Proof proof2) {
 		// TODO: Perhaps assert ti1.getGrounded().equals(ti2.getGrounding()),
 		// and have a separate place where we do the construction which is
 		// currently in the constructor of SeqProof.
-		return new TrustedProof(new SeqProof(ti1, ti2));
+		return new TrustedProof(new SeqProof(proof1, proof2));
 	}
 
 	private TrustedProof.Internal internalTrustedProof;

@@ -14,47 +14,47 @@ import mepk.kernel.Statement;
  */
 public class ParProof implements TrustedProof.Internal {
 
-	private Proof ti1;
-	private Proof ti2;
+	private Proof proof1;
+	private Proof proof2;
 
 	/**
 	 * Create an instance from two proofs.
 	 * 
-	 * @param ti1
+	 * @param proof1
 	 *            one proof
-	 * @param ti2
+	 * @param proof2
 	 *            another proof
 	 */
-	public ParProof(Proof ti1, Proof ti2) {
-		this.ti1 = ti1;
-		this.ti2 = ti2;
+	public ParProof(Proof proof1, Proof proof2) {
+		this.proof1 = proof1;
+		this.proof2 = proof2;
 	}
 
 	@Override
 	public Set<Statement> getGrounding() {
 		Set<Statement> result = new HashSet<Statement>();
-		result.addAll(ti2.getGrounding());
-		result.addAll(ti1.getGrounding());
+		result.addAll(proof2.getGrounding());
+		result.addAll(proof1.getGrounding());
 		return result;
 	}
 
 	@Override
 	public Set<Statement> getGrounded() {
 		Set<Statement> result = new HashSet<Statement>();
-		result.addAll(ti1.getGrounded());
-		result.addAll(ti2.getGrounded());
+		result.addAll(proof1.getGrounded());
+		result.addAll(proof2.getGrounded());
 		return result;
 	}
 
 	@Override
 	public Justification getJustificationFor(Statement statement) {
-		if (ti1.getGrounded().contains(statement)) {
+		if (proof1.getGrounded().contains(statement)) {
 			// if both ti1 and ti2 justify the given statement, we arbitrarily
 			// return ti1's justification
-			return ti1.getJustificationFor(statement);
+			return proof1.getJustificationFor(statement);
 		} else {
-			assert ti2.getGrounded().contains(statement);
-			return ti2.getJustificationFor(statement);
+			assert proof2.getGrounded().contains(statement);
+			return proof2.getJustificationFor(statement);
 		}
 	}
 }

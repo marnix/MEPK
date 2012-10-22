@@ -69,21 +69,21 @@ public abstract class Proof {
 					throw new VerificationException("no justification for " + s);
 				}
 			} else {
-				Proof ti2 = justification.getProof();
+				Proof subproof = justification.getProof();
 				ProofStep proofStep = justification.getProofStep();
 				if (!proofStep.getGrounded1().equals(s)) {
 					throw new VerificationException("incorrect justification for " + s + ": justifying proof step should conclude "
 							+ s + " but did conclude " + proofStep.getGrounded1());
 				}
-				if (!ti2.getGrounded().containsAll(proofStep.getGrounding())) {
+				if (!subproof.getGrounded().containsAll(proofStep.getGrounding())) {
 					throw new VerificationException("incorrect justification for " + s
 							+ ": justifying proof does not prove everything that is required for the proof step");
 				}
-				if (!this.getGrounding().containsAll(ti2.getGrounding())) {
+				if (!this.getGrounding().containsAll(subproof.getGrounding())) {
 					throw new VerificationException("incorrect justification for " + s
 							+ ": justifying proof uses more assumptions than proof being verified");
 				}
-				ti2.verifyStatementsAreJustified(proofStep.getGrounding());
+				subproof.verifyStatementsAreJustified(proofStep.getGrounding());
 			}
 		}
 	}
