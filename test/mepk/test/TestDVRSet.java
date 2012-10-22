@@ -54,4 +54,32 @@ public class TestDVRSet {
 		assertTrue(d3.equals(d1));
 		assertTrue(d3.equals(d2));
 	}
+
+	@Test
+	public void testAddSets() {
+		DVRSet d1 = DVRSet.EMPTY;
+		DVRSet d2 = d1.add("x", "y");
+		DVRSet d3 = d1.add("y", "x");
+		assertEquals(d2, d1.add(d2));
+		assertEquals(d2, d2.add(d1));
+		assertEquals(d2, d1.add(d3));
+		assertEquals(d2, d3.add(d1));
+		assertEquals(d2, d2.add(d3));
+		assertEquals(d2, d3.add(d2));
+		assertEquals(d3, d1.add(d3));
+		assertEquals(d3, d3.add(d1));
+		assertEquals(d3, d2.add(d3));
+		assertEquals(d3, d3.add(d2));
+	}
+
+	@Test
+	public void testAdd() {
+		DVRSet xy = DVRSet.EMPTY.add("x", "y");
+		DVRSet xz = DVRSet.EMPTY.add("x", "z");
+		DVRSet xyxz1 = xy.add("x", "z");
+		DVRSet xyxz2 = xy.add(xz);
+		assertTrue(xyxz1.equals(xyxz2));
+		assertTrue(xyxz2.equals(xyxz1));
+		assertEquals(DVRSet.EMPTY.add("x", "y", "z"), xyxz1.add("y", "z"));
+	}
 }

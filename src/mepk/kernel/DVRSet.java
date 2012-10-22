@@ -3,6 +3,7 @@ package mepk.kernel;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 /**
@@ -74,7 +75,24 @@ public final class DVRSet {
 	 * @return the new DVR set
 	 */
 	public DVRSet add(DVRSet addedDVRs) {
-		return this; // TODO: implement DVRSet weakening
+		// copy the existing map
+		Map<String, Set<String>> newDVRMap = new HashMap<String, Set<String>>(dvrMap);
+		
+		Map<String, Set<String>> addedDVRMap = addedDVRs.dvrMap;
+		for (Entry<String, Set<String>> entry : addedDVRMap.entrySet()) {
+			String varName = entry.getKey();
+			Set<String> distinctVarNames = entry.getValue();
+
+			Set<String> newDistinctVarNames = distinctVarNames;
+			if (newDVRMap.containsKey(varName)) {
+				newDistinctVarNames = new HashSet<String>(newDistinctVarNames);
+				newDistinctVarNames.addAll(newDVRMap.get(varName));
+			}
+			newDVRMap.put(varName, newDistinctVarNames);
+		}
+
+		// create a new set
+		return new DVRSet(newDVRMap);
 	}
 
 	/**
