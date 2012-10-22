@@ -16,7 +16,7 @@ import java.util.Set;
  * if (and only if) they have the same structure. It is only possible to create
  * an instance using the static methods in this class.
  */
-public class Statement {
+public final class Statement {
 
 	/**
 	 * Create a new instance with an empty set of DVRs.
