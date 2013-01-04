@@ -60,15 +60,12 @@ public final class Expression {
 		public Expression wrap(Internal internalExpression);
 	}
 
-	private static final Expression.Wrapper WRAPPER = new WrapperImpl();
-
-	private static class WrapperImpl implements Wrapper {
+	private static final Expression.Wrapper WRAPPER = new Wrapper() {
 		@Override
 		public Expression wrap(Internal internalExpression) {
 			return new Expression(internalExpression);
 		}
-	
-	}
+	};
 
 	/**
 	 * Create a variable expression.
