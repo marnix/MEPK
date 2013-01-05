@@ -28,7 +28,19 @@ public final class Expression {
 	 * the same structure.
 	 */
 	public interface Internal {
+
+		/**
+		 * An object that can wrap an {@link Internal Expression.Internal} up as
+		 * an {@link Expression}.
+		 */
 		public interface Wrapper {
+			/**
+			 * Wrap the given internal expression.
+			 * 
+			 * @param internalExpression
+			 *            the internal expression to be wrapped
+			 * @return the resulting expression
+			 */
 			public Expression wrap(Internal internalExpression);
 		}
 
