@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import mepk.kernel.Expression.Internal.Wrapper;
+
 import org.codehaus.jackson.JsonNode;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
@@ -26,6 +28,10 @@ public final class Expression {
 	 * the same structure.
 	 */
 	public interface Internal {
+		public interface Wrapper {
+			public Expression wrap(Internal internalExpression);
+		}
+
 		@Override
 		public int hashCode();
 
@@ -56,11 +62,7 @@ public final class Expression {
 		public void addVarNamesTo(Set<String> result);
 	}
 
-	public interface Wrapper {
-		public Expression wrap(Internal internalExpression);
-	}
-
-	private static final Expression.Wrapper WRAPPER = new Wrapper() {
+	private static final Wrapper WRAPPER = new Wrapper() {
 		@Override
 		public Expression wrap(Internal internalExpression) {
 			return new Expression(internalExpression);

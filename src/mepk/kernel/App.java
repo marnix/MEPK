@@ -109,7 +109,7 @@ public class App implements Expression.Internal {
 	}
 
 	@Override
-	public Expression substitute(String varName, Expression.Internal replacement, Expression.Wrapper wrapper) {
+	public Expression substitute(String varName, Expression.Internal replacement, Wrapper wrapper) {
 		List<Expression> es = new ArrayList<Expression>();
 		for (Expression e : subexpressions) {
 			es.add(e.getInternalExpression().substitute(varName, replacement, wrapper));

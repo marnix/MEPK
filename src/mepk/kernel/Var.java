@@ -2,8 +2,6 @@ package mepk.kernel;
 
 import java.util.Set;
 
-import mepk.kernel.Expression.Wrapper;
-
 /**
  * A variable expression. Instances are obtained through
  * {@link Expression#asVar()}, for expressions which have been created through
