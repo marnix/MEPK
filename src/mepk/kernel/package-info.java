@@ -8,7 +8,7 @@
  * existing statements: there are only a few built-in proof steps (substitute, compose, weaken)
  * and none can be added.
  * Finally a {@link mepk.kernel.Proof} represents a recipe for constructing one set of
- * statements for another using only ProofSteps.
+ * statements from another using only ProofSteps.
  * <p>
  * The language of statements and their {@link mepk.kernel.Expression expressions} is that of Ghilbert,
  * but using Metamath's philosophy of types:
