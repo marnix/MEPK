@@ -5,8 +5,8 @@ Author: Marnix Klooster <marnix.klooster@gmail.com>
 License: GPLv3
 
 
-This is a Java library for building checked Metamath/Ghilbert-like proofs, which should
-be sufficient for verifying all Ghilbert and most Metamath proofs.
+This is a Java library for building checked Metamath/Ghilbert-like proofs,
+which should be sufficient for verifying all Ghilbert and most Metamath proofs.
 
 See the Javadoc for more information.
 
@@ -17,34 +17,57 @@ To-do list for functionality:
  
  - Support (non-empty) DVRSets.
  
- - Design and implement abbreviations.  Idea:
-
-    * An 'abbreviate' proof step, which is created from a statement S and an abbreviation;
-      the proof step grounds S, and it's sole grounding statement is 'S with each instance
-      of the abbreviation expanded'.
-      
-      This is the only way to introduce an abbreviation.
+ - Design and implement abbreviations.  My current best design idea is the
+   following.
+ 
+    * We do _not_ introduce a new 'abbreviation' proof step.
+ 
+    * Every proof has a set of abbreviations AA, so that a proof means, "From
+      grounding statements SS one can construct statements TT-after-expanding-
+      all-of-AA, using only proof steps."
     
-    * An 'expanded' proof, which is created from a proof P and an abbreviation name; the
-      resulting proof has the same grounding statements as P, but its grounded statements
-      are those of P, but with each instance of the abbreviation expanded.
+    * When verifying that a proof really proves statement T, it shows how to
+      construct T-after-expanding-all-of-AA.
       
-      This is the only way to eliminate an abbreviation.
+    * Abbreviation introduction is by a (non-kernel) proof which is created
+      from a statement T and an abbreviation A: this proof grounds only T; has
+      A as its sole abbreviation; and its only grounding statement is
+      S-after-expanding-A.
+      
+    * Abbreviation elimination is by a (non-kernel) proof which is created from
+      a proof P (with grounding SS and grounded TT) which has abbreviations A
+      and AA: the created proof has grounding statements SS; its grounded
+      statements are TT-after-expanding-all-of-AA; and it has only
+      abbreviations AA.
     
-   With 'expanded', a proof "the positive reals form a group" can be used to translate
-   statements about a group into statements about the positive reals.
+   Rationale.  The key property for an abbreviation mechanism, and in general
+   for _any_ definition mechanism, is that an abbreviation should not allow new
+   statements to be proved.  To be more precise, if we can construct T from SS
+   using abbreviation A, where this abbreviation is not used in T, then it must
+   also be possible to construct T from SS _without_ using abbreviation A.
    
-   Open issue: can these features be used to create a proof "the positive reals form a
-   group"?  I think they can, if we also have a 'hypothesis' proof step, which
-   grounds any statement whose conclusion is identical to one of it hypotheses.
+   The above idea makes sure that this property is checked by our proof
+   verification algorithm.
    
-   Alternative design: Instead of an 'abbreviate' proof step, have an 'abbreviate'
-   _proof_.  This puts abbreviations outside of the mepk.kernel, and Minimal is Good (TM).
-
+   An alternative is to introduce an 'abbreviation' proof step.  That would
+   make our verification algorithm simpler, but it makes it impossible to check
+   the key property.
+   
+   Note: Using an abbreviation elimination proof, a proof "the positive reals
+   form a group" can be used to translate statements about a group into
+   statements about the positive reals.
+      
+   Open issue: Can these features be used to create a proof "the positive reals
+   form a group"?  I think they can, if we also have a 'hypothesis' proof step,
+   which grounds any statement whose conclusion is identical to one of it
+   hypotheses.
+   
 
 Implementation issues:
  
- - Change method names to that every Set<Statement> is called a 'theory', e.g., getGrounding()
-   -> getGroundingTheory()?  Con: The current names are short, and that is good.
+ - Change method names to that every Set<Statement> is called a 'theory', e.g.,
+   getGrounding() -> getGroundingTheory()?  Con: The current names are short,
+   and that is good.
    
- - Implement a non-recursive version of the verification mechanism, to prevent stack overflow.
+ - Implement a non-recursive version of the verification mechanism, to prevent
+   stack overflow.
