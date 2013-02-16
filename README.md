@@ -1,3 +1,5 @@
+[![Build Status](https://buildhive.cloudbees.com/job/marnix/job/MEPK/badge/icon)](https://buildhive.cloudbees.com/job/marnix/job/MEPK/)
+
 MEPK: a Minimal Extensible Proof Kernel
 =======================================
 
