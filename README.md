@@ -2,6 +2,7 @@ MEPK: a Minimal Extensible Proof Kernel
 =======================================
 
 Author: Marnix Klooster <marnix.klooster@gmail.com>
+
 License: GPLv3
 
 
