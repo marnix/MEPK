@@ -9,7 +9,7 @@ License: GPLv3
 This is a Java library for building checked Metamath/Ghilbert-like proofs,
 which should be sufficient for verifying all Ghilbert and most Metamath proofs.
 
-See the Javadoc for more information.
+See the JavaDoc for more information.
 
 
 To-do list for functionality:
@@ -40,6 +40,9 @@ To-do list for functionality:
       and AA: the created proof has grounding statements SS; its grounded
       statements are TT-after-expanding-all-of-AA; and it has only
       abbreviations AA.
+
+    * An abbreviation can also add hypotheses, so that it is possible to say,
+      "(group-elem x) abbreviates (Real x) for which (> x 0)".
     
    Rationale.  The key property for an abbreviation mechanism, and in general
    for _any_ definition mechanism, is that an abbreviation should not allow new
@@ -57,16 +60,22 @@ To-do list for functionality:
    Note: Using an abbreviation elimination proof, a proof "the positive reals
    form a group" can be used to translate statements about a group into
    statements about the positive reals.
-      
+
    Open issue: Can these features be used to create a proof "the positive reals
    form a group"?  I think they can, if we also have a 'hypothesis' proof step,
    which grounds any statement whose conclusion is identical to one of it
    hypotheses.
-   
+ 
+ - Perhaps implement export based on a proof's justifications
+   (`getJustificationFor()`)?
+ 
+ - Add a `final` `equals()` method on `Proof`, which calls two proofs equal if
+   they have the same grounding statements, grounded statements, and
+   abbreviations.
 
 Implementation issues:
  
- - Change method names to that every Set<Statement> is called a 'theory', e.g.,
+ - Change method names so that every Set<Statement> is called a 'theory', e.g.,
    getGrounding() -> getGroundingTheory()?  Con: The current names are short,
    and that is good.
    
