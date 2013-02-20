@@ -6,6 +6,7 @@ import java.util.Set;
 
 import mepk.kernel.internal.Substitute;
 import mepk.kernel.internal.Weaken;
+import mepk.kernel.util.TrivialProof;
 
 /**
  * A proof step is the smallest step in a proof: it shows how to create a new
@@ -14,31 +15,6 @@ import mepk.kernel.internal.Weaken;
  * the static methods in this class.
  */
 public final class ProofStep extends Proof {
-
-	private static final class TrivialProof extends Proof {
-
-		private final Set<Statement> statements;
-
-		public TrivialProof(Set<Statement> statements) {
-			this.statements = statements;
-		}
-
-		@Override
-		public Set<Statement> getGrounding() {
-			return statements;
-		}
-
-		@Override
-		public Set<Statement> getGrounded() {
-			return getGrounding();
-		}
-
-		@Override
-		public Justification getJustificationFor(Statement statement) {
-			return null;
-		}
-
-	}
 
 	/** An internal version of a {@link ProofStep}. */
 	public interface Internal {
