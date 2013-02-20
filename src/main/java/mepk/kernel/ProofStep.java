@@ -69,7 +69,9 @@ public final class ProofStep extends Proof {
 		return new ProofStep(new Weaken(statement, addedDVRs, addedHypotheses));
 	}
 
-	// TODO: Add Compose()
+	public static void Compose(Statement x, Statement... y) {
+		// TODO: Implement
+	}
 
 	private final ProofStep.Internal internalProofStep;
 

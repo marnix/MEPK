@@ -4,6 +4,7 @@ import static mepk.kernel.Expression.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -78,6 +79,18 @@ public final class Statement {
 			throw new MEPKException(String.format("Ill-typed statement: all of %s should be typed, but only %s are.",
 					getVarNames(), typedVarNames));
 		}
+	}
+
+	public DVRSet getDVRs() {
+		return dvrs;
+	}
+
+	public Collection<? extends Expression> getHypotheses() {
+		return hypotheses;
+	}
+
+	public Expression getConclusion() {
+		return conclusion;
 	}
 
 	/*

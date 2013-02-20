@@ -17,8 +17,6 @@ for more information.
 
 To-do list for functionality:
 
- - Implement the 'compose' proof step.
- 
  - Design and implement abbreviations.  My current best design idea is the
    following.
  
