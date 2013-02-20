@@ -57,14 +57,43 @@ public final class DVRSet {
 	/**
 	 * Replace the given variable name by the given set of variable names.
 	 * 
-	 * @param varName
+	 * @param replacedVarName
 	 *            the variable name to be replaced
-	 * @param varNames
+	 * @param replacementVarNames
 	 *            the replacing variable names
 	 * @return the new DVR set
 	 */
-	public DVRSet substitute(String varName, Iterable<String> varNames) {
-		return this; // TODO: implement DVRSet substitution
+	public DVRSet substitute(String replacedVarName, Iterable<String> replacementVarNames) {
+		Map<String, Set<String>> newDVRMap = new HashMap<String, Set<String>>();
+
+		for (Entry<String, Set<String>> entry : this.dvrMap.entrySet()) {
+			String varName = entry.getKey();
+			Set<String> distinctVarNames = entry.getValue();
+
+			Set<String> d = new HashSet<String>(distinctVarNames);
+			if (d.remove(replacedVarName)) {
+				for (String replacementVarName : replacementVarNames) {
+					d.add(replacementVarName);
+				}
+			}
+			if (varName.equals(replacedVarName)) {
+				for (String replacementVarName : replacementVarNames) {
+					if (d.isEmpty()) {
+						newDVRMap.remove(replacementVarName);
+					} else {
+						newDVRMap.put(replacementVarName, d);
+					}
+				}
+			} else {
+				if (d.isEmpty()) {
+					newDVRMap.remove(varName);
+				} else {
+					newDVRMap.put(varName, d);
+				}
+			}
+		}
+
+		return new DVRSet(newDVRMap);
 	}
 
 	/**
@@ -77,7 +106,7 @@ public final class DVRSet {
 	public DVRSet add(DVRSet addedDVRs) {
 		// copy the existing map
 		Map<String, Set<String>> newDVRMap = new HashMap<String, Set<String>>(dvrMap);
-		
+
 		Map<String, Set<String>> addedDVRMap = addedDVRs.dvrMap;
 		for (Entry<String, Set<String>> entry : addedDVRMap.entrySet()) {
 			String varName = entry.getKey();

@@ -82,4 +82,33 @@ public class TestDVRSet {
 		assertTrue(xyxz2.equals(xyxz1));
 		assertEquals(DVRSet.EMPTY.add("x", "y", "z"), xyxz1.add("y", "z"));
 	}
+
+	@Test
+	public void testSubstitute1() {
+		DVRSet xy = DVRSet.EMPTY.add("x", "y");
+		assertEquals(DVRSet.EMPTY.add("x", "z"), xy.substitute("y", Arrays.asList("z")));
+	}
+
+	@Test
+	public void testSubstitute2() {
+		DVRSet xy = DVRSet.EMPTY.add("x", "y");
+		assertEquals(xy, xy.substitute("y", Arrays.asList("y")));
+	}
+
+	@Test
+	public void testSubstitute3() {
+		DVRSet xy = DVRSet.EMPTY.add("x", "y");
+		assertEquals(DVRSet.EMPTY, xy.substitute("y", Arrays.<String> asList()));
+	}
+
+	@Test
+	public void testSubstitute4() {
+		DVRSet xy = DVRSet.EMPTY.add("x", "y");
+		assertEquals(DVRSet.EMPTY.add("x", "a").add("x", "b"), xy.substitute("y", Arrays.asList("a", "b")));
+	}
+
+	@Test
+	public void testSubstitute5() {
+		assertEquals(DVRSet.EMPTY, DVRSet.EMPTY.substitute("y", Arrays.asList("a", "b")));
+	}
 }

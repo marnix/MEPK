@@ -18,8 +18,6 @@ To-do list for functionality:
 
  - Implement the 'compose' proof step.
  
- - Support (non-empty) DVRSets.
- 
  - Design and implement abbreviations.  My current best design idea is the
    following.
  
