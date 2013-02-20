@@ -11,7 +11,8 @@ License: GPLv3
 This is a Java library for building checked Metamath/Ghilbert-like proofs,
 which should be sufficient for verifying all Ghilbert and most Metamath proofs.
 
-See the JavaDoc for more information.
+See [the JavaDoc](https://buildhive.cloudbees.com/view/My%20Repositories/job/marnix/job/MEPK/javadoc/)
+for more information.
 
 
 To-do list for functionality:
