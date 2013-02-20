@@ -78,22 +78,25 @@ public final class DVRSet {
 			}
 			if (varName.equals(replacedVarName)) {
 				for (String replacementVarName : replacementVarNames) {
-					if (d.isEmpty()) {
-						newDVRMap.remove(replacementVarName);
-					} else {
-						newDVRMap.put(replacementVarName, d);
-					}
+					putIn(newDVRMap, replacementVarName, d);
 				}
 			} else {
-				if (d.isEmpty()) {
-					newDVRMap.remove(varName);
-				} else {
-					newDVRMap.put(varName, d);
-				}
+				putIn(newDVRMap, varName, d);
 			}
 		}
 
 		return new DVRSet(newDVRMap);
+	}
+
+	private static void putIn(Map<String, Set<String>> dvrMap, String varName, Set<String> distinctVarNames) {
+		if (distinctVarNames.contains(varName)) {
+			throw new MEPKException(String.format("Variable '%s' may not be disjoint with itself", varName));
+		}
+		if (distinctVarNames.isEmpty()) {
+			dvrMap.remove(varName);
+		} else {
+			dvrMap.put(varName, distinctVarNames);
+		}
 	}
 
 	/**

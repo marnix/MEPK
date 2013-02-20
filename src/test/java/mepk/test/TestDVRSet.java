@@ -111,4 +111,15 @@ public class TestDVRSet {
 	public void testSubstitute5() {
 		assertEquals(DVRSet.EMPTY, DVRSet.EMPTY.substitute("y", Arrays.asList("a", "b")));
 	}
+
+	@Test
+	public void testSubstitute6() {
+		DVRSet xy = DVRSet.EMPTY.add("x", "y");
+		try {
+			xy.substitute("y", Arrays.asList("x"));
+			fail();
+		} catch (MEPKException e) {
+			AssertUtil.assertTrueElseException(e.getMessage().contains("Variable 'x' may not be disjoint with itself"), e);
+		}
+	}
 }
