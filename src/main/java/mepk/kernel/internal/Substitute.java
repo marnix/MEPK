@@ -10,7 +10,7 @@ import mepk.kernel.Statement;
 
 /**
  * A substitution proof step takes a statement, and constructs a structurally
- * statement by substituting one variable for a (typed) expression.
+ * similar statement by substituting one variable for a (typed) expression.
  */
 public class Substitute implements ProofStep.Internal {
 
