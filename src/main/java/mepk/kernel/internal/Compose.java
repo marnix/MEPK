@@ -12,11 +12,26 @@ import mepk.kernel.MEPKException;
 import mepk.kernel.ProofStep;
 import mepk.kernel.Statement;
 
+/**
+ * A compose proof takes statements x, y, ..., each with hypotheses Hx1, Hx2,
+ * ... and conclusion Cx, ..., and a statement with exactly the same hypotheses
+ * Cx, Cy, ... and conclusion C: it 'applies' the latter statement, by
+ * constructing the statement with hypotheses Hx1, Hx2, ..., Hy1, Hy2, ..., and
+ * conclusion C.
+ */
 public class Compose implements ProofStep.Internal {
 
 	private final HashSet<Statement> grounding;
 	private final Statement grounded;
 
+	/**
+	 * Create an instance.
+	 * 
+	 * @param statement
+	 *            the 'applied' statement
+	 * @param statements
+	 *            the statements to which statement is 'applied'
+	 */
 	public Compose(Statement statement, Statement... statements) {
 		grounding = new HashSet<Statement>(Arrays.asList(statements));
 		grounding.add(statement);

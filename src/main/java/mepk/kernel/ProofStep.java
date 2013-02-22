@@ -70,6 +70,16 @@ public final class ProofStep extends Proof {
 		return new ProofStep(new Weaken(statement, addedDVRs, addedHypotheses));
 	}
 
+	/**
+	 * Create a compose proof step, which unifies the conclusions of the given
+	 * statements with the hypotheses of the given statement
+	 * 
+	 * @param statement
+	 *            the statement which is 'applied'
+	 * @param statements
+	 *            the statements to which the statement parameter is 'applied'
+	 * @return the created proof step
+	 */
 	public static ProofStep Compose(Statement statement, Statement... statements) {
 		return new ProofStep(new Compose(statement, statements));
 	}
