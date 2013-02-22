@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
+import mepk.kernel.internal.Compose;
 import mepk.kernel.internal.Substitute;
 import mepk.kernel.internal.Weaken;
 import mepk.kernel.util.TrivialProof;
@@ -69,8 +70,8 @@ public final class ProofStep extends Proof {
 		return new ProofStep(new Weaken(statement, addedDVRs, addedHypotheses));
 	}
 
-	public static void Compose(Statement x, Statement... y) {
-		// TODO: Implement
+	public static ProofStep Compose(Statement statement, Statement... statements) {
+		return new ProofStep(new Compose(statement, statements));
 	}
 
 	private final ProofStep.Internal internalProofStep;

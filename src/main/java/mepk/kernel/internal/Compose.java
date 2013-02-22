@@ -20,21 +20,28 @@ public class Compose implements ProofStep.Internal {
 	public Compose(Statement statement, Statement... statements) {
 		grounding = new HashSet<Statement>(Arrays.asList(statements));
 		grounding.add(statement);
-		
+
 		List<Expression> hypotheses = new ArrayList<Expression>();
-		Set<Expression> conclusions = new HashSet<Expression>();
+		Set<Expression> statementsConclusions = new HashSet<Expression>();
 		DVRSet dvrs = DVRSet.EMPTY;
 		for (Statement s : statements) {
 			hypotheses.addAll(s.getHypotheses());
-			conclusions.add(s.getConclusion());
+			statementsConclusions.add(s.getConclusion());
 			dvrs.add(s.getDVRs());
 		}
 		dvrs.add(statement.getDVRs());
-		if (!conclusions.equals(statement.getHypotheses())) {
+
+		if (!statement.getHypotheses().containsAll(statementsConclusions)) {
 			throw new MEPKException(String.format(
-					"Conclusions of sub-statements, %s, should be equal to hypotheses of composing statement, %s", conclusions,
+					"Conclusions of sub-statements, %s, should be a subset of the hypotheses of composing statement, %s",
+					statementsConclusions,
 					statement.getHypotheses()));
 		}
+		HashSet<Expression> statementHypothesesWithoutStatementsConclusions = new HashSet<Expression>(statement.getHypotheses());
+		statementHypothesesWithoutStatementsConclusions.removeAll(statementsConclusions);
+
+		hypotheses.addAll(statementHypothesesWithoutStatementsConclusions);
+
 		grounded = Statement.Stat(dvrs, hypotheses, statement.getConclusion());
 	}
 
