@@ -18,10 +18,26 @@ public final class DVRSet {
 	/** The empty DVRSet. */
 	public static final DVRSet EMPTY = new DVRSet(new HashMap<String, Set<String>>());
 
+	/**
+	 * If variables x and y are distinct, then for key "x" the set contains "y",
+	 * and vice versa.
+	 */
 	private final Map<String, Set<String>> dvrMap;
 
 	private DVRSet(Map<String, Set<String>> dvrMap) {
 		this.dvrMap = dvrMap;
+
+		// check the internal consistency of the provided dvrMap
+		try {
+			assert false; // only perform the loops below if assertions are on
+		} catch (AssertionError ex) {
+			for (String k : dvrMap.keySet()) {
+				assert !dvrMap.get(k).contains(k);
+				for (String v : dvrMap.get(k)) {
+					assert dvrMap.get(v).contains(k);
+				}
+			}
+		}
 	}
 
 	@Override
