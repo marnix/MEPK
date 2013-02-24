@@ -1,10 +1,12 @@
 package mepk.builtin;
 
+import java.util.Map;
 import java.util.Set;
 
 import mepk.builtin.internal.ParProof;
 import mepk.builtin.internal.SeqProof;
 import mepk.builtin.internal.TrivialProof;
+import mepk.kernel.Abbreviation;
 import mepk.kernel.Justification;
 import mepk.kernel.Proof;
 import mepk.kernel.Statement;
@@ -34,6 +36,8 @@ public final class TrustedProof extends Proof {
 		 * @return the grounded statements
 		 */
 		Set<Statement> getGrounded();
+
+		Map<String, Abbreviation> getAbbreviations();
 
 		/**
 		 * Return a justification for the given statement.
@@ -110,6 +114,11 @@ public final class TrustedProof extends Proof {
 	public Set<Statement> getGrounded() {
 		return internalTrustedProof.getGrounded();
 	}
+
+	@Override
+	public Map<String, mepk.kernel.Abbreviation> getAbbreviations() {
+		return internalTrustedProof.getAbbreviations();
+	};
 
 	@Override
 	public Justification getJustificationFor(Statement statement) {

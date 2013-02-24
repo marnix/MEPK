@@ -1,5 +1,6 @@
 package mepk.kernel;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -29,7 +30,7 @@ public abstract class Proof {
 	 */
 	public abstract Set<Statement> getGrounded();
 
-	// TODO: public abstract Map<String, Abbreviation> getAbbreviations();
+	public abstract Map<String, Abbreviation> getAbbreviations();
 
 	/**
 	 * Return a justification for the given statement.
