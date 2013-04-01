@@ -1,6 +1,9 @@
 package mepk.kernel;
 
+import java.util.Map;
 import java.util.Set;
+
+import mepk.kernel.util.ExpandedAbbreviationsProof;
 
 /**
  * A proof is a recipe for constructing one set of statements from another using
@@ -29,7 +32,12 @@ public abstract class Proof {
 	 */
 	public abstract Set<Statement> getGrounded();
 
-	// TODO: public abstract Map<String, Abbreviation> getAbbreviations();
+	/**
+	 * Return the abbreviations used by this proof.
+	 * 
+	 * @return the abbreviations
+	 */
+	public abstract Map<String, Abbreviation> getAbbreviations();
 
 	/**
 	 * Return a justification for the given statement.
@@ -74,11 +82,15 @@ public abstract class Proof {
 		// this is the verification algorithm in very rough form,
 		// in recursive form, for easier debugging
 		// (in practice one doesn't want to blow up the Java stack arbitrarily)
-		// TODO: change the verification to a non-recursive implementation
-		verifyStatementsAreJustified(this.getGrounded());
+		// TODO: change the verification to a non-recursive implementation?
+		new ExpandedAbbreviationsProof(this).verifyStatementsAreJustified(this.getGrounded());
 	}
 
-	private void verifyStatementsAreJustified(Set<Statement> grounded) throws VerificationException {
+	protected final void verifyStatementsAreJustified(Set<Statement> grounded) throws VerificationException {
+		if (!this.getAbbreviations().isEmpty()) {
+			throw new MEPKException("illegal use of verification algorithm: did not expect abbreviations "
+					+ this.getAbbreviations());
+		}
 		assert this.getGrounded().containsAll(grounded);
 		for (Statement s : grounded) {
 			Justification justification = getJustificationFor(s);

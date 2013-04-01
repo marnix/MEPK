@@ -1,7 +1,10 @@
 package mepk.kernel.util;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
+import mepk.kernel.Abbreviation;
 import mepk.kernel.Justification;
 import mepk.kernel.Proof;
 import mepk.kernel.Statement;
@@ -25,6 +28,11 @@ public final class TrivialProof extends Proof {
 	@Override
 	public Set<Statement> getGrounded() {
 		return getGrounding();
+	}
+
+	@Override
+	public Map<String, Abbreviation> getAbbreviations() {
+		return Collections.emptyMap();
 	}
 
 	@Override

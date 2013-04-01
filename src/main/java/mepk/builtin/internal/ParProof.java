@@ -1,10 +1,14 @@
 package mepk.builtin.internal;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import mepk.builtin.TrustedProof;
+import mepk.kernel.Abbreviation;
 import mepk.kernel.Justification;
+import mepk.kernel.MEPKException;
 import mepk.kernel.Proof;
 import mepk.kernel.Statement;
 
@@ -28,6 +32,16 @@ public class ParProof implements TrustedProof.Internal {
 	public ParProof(Proof proof1, Proof proof2) {
 		this.proof1 = proof1;
 		this.proof2 = proof2;
+
+		Set<String> abbrs1 = proof1.getAbbreviations().keySet();
+		Set<String> abbrs2 = proof2.getAbbreviations().keySet();
+		Set<String> commonAbbrs = new HashSet<String>(abbrs1);
+		commonAbbrs.retainAll(abbrs2);
+		for (String commonAbbr : commonAbbrs) {
+			if (!proof1.getAbbreviations().get(commonAbbr).equals(proof2.getAbbreviations().get(commonAbbr))) {
+				throw new MEPKException("Parallel proofs have different abbreviation " + commonAbbr);
+			}
+		}
 	}
 
 	@Override
@@ -43,6 +57,14 @@ public class ParProof implements TrustedProof.Internal {
 		Set<Statement> result = new HashSet<Statement>();
 		result.addAll(proof1.getGrounded());
 		result.addAll(proof2.getGrounded());
+		return result;
+	}
+
+	@Override
+	public Map<String, Abbreviation> getAbbreviations() {
+		HashMap<String, Abbreviation> result = new HashMap<String, Abbreviation>();
+		result.putAll(proof1.getAbbreviations());
+		result.putAll(proof2.getAbbreviations());
 		return result;
 	}
 

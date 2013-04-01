@@ -54,10 +54,10 @@ To-do list for functionality:
    
    Implementation idea for verification of abbreviations:
    
-    * Create `mepk.kernel.util.NoAbbreviationsProof` which is a wrapper around
-      an arbitrary proof.  This expands all the wrapped proof's
-      abbreviations (in grounding, grounded, and justification `ProofStep`), and wraps the
-      justification `Proof` again in a `NoAbbreviationsProof`.
+    * Create `mepk.kernel.util.ExpandedAbbreviationsProof` which is a wrapper around
+      an arbitrary proof.  This expands all the wrapped proof's abbreviations
+      (in the grounded statements and in its justification `ProofStep`), and
+      wraps the justification `Proof` again in a `NoAbbreviationsProof`.
    
     * `Proof#verify()` then wraps itself in this way, and verifies the result
       using the current verification algorithm.

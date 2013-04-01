@@ -1,9 +1,12 @@
 package mepk.builtin.internal;
 
+import java.util.Collections;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import mepk.builtin.TrustedProof;
+import mepk.kernel.Abbreviation;
 import mepk.kernel.Justification;
 import mepk.kernel.Statement;
 
@@ -38,6 +41,11 @@ public class TrivialProof implements TrustedProof.Internal {
 		Set<Statement> result = new HashSet<Statement>();
 		result.addAll(statements);
 		return result;
+	}
+
+	@Override
+	public Map<String, Abbreviation> getAbbreviations() {
+		return Collections.emptyMap();
 	}
 
 	@Override

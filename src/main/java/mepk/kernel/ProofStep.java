@@ -115,6 +115,11 @@ public final class ProofStep extends Proof {
 	}
 
 	@Override
+	public Map<String, Abbreviation> getAbbreviations() {
+		return Collections.emptyMap();
+	}
+
+	@Override
 	public Justification getJustificationFor(Statement statement) {
 		return new Justification(this, new TrivialProof(getGrounding()));
 	}
