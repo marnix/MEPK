@@ -45,6 +45,24 @@ public abstract class Proof {
 	 */
 	public abstract Justification getJustificationFor(Statement statement);
 
+	@Override
+	public final int hashCode() {
+		return getGrounding().hashCode() ^ getGrounded().hashCode();
+	}
+
+	@Override
+	public final boolean equals(Object other) {
+		if (other == null) {
+			return false;
+		}
+		if (!(other instanceof Proof)) {
+			return false;
+		}
+		Proof that = (Proof) other;
+		return this.getGrounding().equals(that.getGrounding()) && this.getGrounded().equals(that.getGrounded());
+		// TODO: add abbreviations
+	}
+
 	/**
 	 * Verify this proof, by checking its {@link Justification justifications}
 	 * and recursively verifying their {@link Justification#getProof() proofs}.

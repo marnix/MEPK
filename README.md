@@ -77,10 +77,6 @@ To-do list for functionality:
  
  - Perhaps implement export based on a proof's justifications
    (`getJustificationFor()`)?
- 
- - Add a `final` `equals()` method on `Proof`, which calls two proofs equal if
-   they have the same grounding statements, grounded statements, and
-   abbreviations.
 
 Implementation issues:
  
