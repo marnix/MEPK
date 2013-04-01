@@ -59,7 +59,7 @@ public final class Expression {
 		 * @param replacement
 		 *            the replacement expression
 		 * @param wrapper
-		 *            TODO
+		 *            expression wrapper
 		 * @return the new expression
 		 */
 		public Expression substitute(String varName, Expression.Internal replacement, Wrapper wrapper);

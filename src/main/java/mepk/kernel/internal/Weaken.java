@@ -27,7 +27,6 @@ public class Weaken implements ProofStep.Internal {
 	 * @param addedHypotheses
 	 *            the added hypotheses
 	 */
-	// TODO: Add DVRs argument
 	public Weaken(Statement statement, DVRSet addedDVRs, Expression... addedHypotheses) {
 		this.statement = statement;
 		result = statement.weaken(addedDVRs, addedHypotheses);
