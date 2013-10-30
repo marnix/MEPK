@@ -1,17 +1,11 @@
 package mepk.kernel;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import mepk.kernel.Expression.Internal.Wrapper;
-
-import org.codehaus.jackson.JsonNode;
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  * This class represents an expression, i.e., either a variable, or a constant
@@ -152,46 +146,6 @@ public final class Expression {
 	 */
 	public static Expression Type(Expression expr, String typeName) {
 		return App("", expr, App(typeName, new Expression[] {}));
-	}
-
-	/**
-	 * Parse the given JSON string into an expression.
-	 * 
-	 * @param string
-	 *            the JSON representation
-	 * @return the parsed expression
-	 * @throws JsonParseException
-	 *             if a malformed JSON string is supplied
-	 * @throws MEPKException
-	 *             if the JSON string does not represent an expression
-	 */
-	public static Expression FromJSON(String string) throws JsonParseException, MEPKException {
-		try {
-			return FromJSON(new ObjectMapper().readValue(string, JsonNode.class));
-		} catch (JsonMappingException e) {
-			assert false;
-			throw new RuntimeException(e);
-		} catch (IOException e) {
-			assert false;
-			throw new RuntimeException(e);
-		}
-	}
-
-	private static Expression FromJSON(JsonNode node) throws MEPKException {
-		if (node.isArray()) {
-			List<Expression> exprs = new ArrayList<Expression>();
-			for (int i = 1; i < node.size(); i++) {
-				JsonNode subnode = node.get(i);
-				Expression subexpr = FromJSON(subnode);
-				exprs.add(subexpr);
-			}
-			return App(node.get(0).getTextValue(), exprs.toArray(new Expression[exprs.size()]));
-		} else if (node.isTextual()) {
-			return Var(node.getTextValue());
-		} else {
-			assert false;
-			throw new MEPKException("expression should be represented by a JSON string or array");
-		}
 	}
 
 	private final Expression.Internal internalExpression;
