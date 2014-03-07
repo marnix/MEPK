@@ -32,7 +32,7 @@ To-do list for functionality:
     * Abbreviation introduction is by a (non-kernel) proof which is created
       from a statement T and an abbreviation A: this proof grounds only T; has
       A as its sole abbreviation; and its only grounding statement is
-      S-after-expanding-A.
+      T-after-expanding-A.
       
     * Abbreviation elimination is by a (non-kernel) proof which is created from
       a proof P (with grounding SS and grounded TT) which has abbreviations A
