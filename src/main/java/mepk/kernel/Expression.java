@@ -145,7 +145,7 @@ public final class Expression {
 	 * @return the type expression
 	 */
 	public static Expression Type(Expression expr, String typeName) {
-		return App("", expr, App(typeName, new Expression[] {}));
+		return App(typeName, new Expression[] { expr });
 	}
 
 	private final Expression.Internal internalExpression;

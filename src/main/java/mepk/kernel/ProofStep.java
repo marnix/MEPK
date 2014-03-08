@@ -50,7 +50,7 @@ public final class ProofStep extends Proof {
 	 * @return the created proof step
 	 */
 	public static ProofStep Substitute(Statement statement, String varName, Expression replacement,
-			Map<String, Expression> typesOfNewVars) {
+			Map<String, String> typesOfNewVars) {
 		return new ProofStep(new Substitute(statement, varName, replacement, typesOfNewVars));
 	}
 

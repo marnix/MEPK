@@ -65,9 +65,9 @@ public final class Statement {
 		Set<String> typedVarNames = new HashSet<String>();
 		for (Expression hyp : hypotheses) {
 			App f = hyp.asApp();
-			if (f != null && f.getConstName().equals("")) {
+			if (f != null) {
 				List<Expression> args = f.getSubexpressions();
-				if (args.size() > 0) {
+				if (args.size() == 1) {
 					Var tv = args.get(0).asVar();
 					if (tv != null) {
 						typedVarNames.add(tv.getVarName());
@@ -172,10 +172,10 @@ public final class Statement {
 	 *            the additional type expressions
 	 * @return the new statement
 	 */
-	public Statement substitute(String varName, Expression replacement, Map<String, Expression> typesOfNewVars) {
+	public Statement substitute(String varName, Expression replacement, Map<String, String> typesOfNewVars) {
 		List<Expression> allHyps = new ArrayList<Expression>();
-		for (Entry<String, Expression> e : typesOfNewVars.entrySet()) {
-			Expression typeHyp = App("", Var(e.getKey()), e.getValue());
+		for (Entry<String, String> e : typesOfNewVars.entrySet()) {
+			Expression typeHyp = App(e.getValue(), Var(e.getKey()));
 			allHyps.add(typeHyp);
 		}
 		for (Expression hyp : hypotheses) {

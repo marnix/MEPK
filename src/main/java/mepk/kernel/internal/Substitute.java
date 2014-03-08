@@ -29,7 +29,7 @@ public class Substitute implements ProofStep.Internal {
 	 * @param typesOfNewVars
 	 *            the additional type expressions
 	 */
-	public Substitute(Statement statement, String varName, Expression replacement, Map<String, Expression> typesOfNewVars) {
+	public Substitute(Statement statement, String varName, Expression replacement, Map<String, String> typesOfNewVars) {
 		this.statement = statement;
 		// TODO: Check arguments
 		result = statement.substitute(varName, replacement, typesOfNewVars);

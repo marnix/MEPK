@@ -2,11 +2,9 @@ package mepk.builtin;
 
 import java.util.LinkedHashMap;
 
-import mepk.kernel.Expression;
-
 /**
- * A helper class for easily creating a {@code Map<String,Expression>}, which
- * maps variable names to type expressions.
+ * A helper class for easily creating a {@code Map<String,String>}, which maps
+ * variable names to type expressions.
  */
 public class Types {
 
@@ -40,10 +38,9 @@ public class Types {
 	}
 
 	/**
-	 * A {@code HashMap<String,Expression>} mapping variables to type
-	 * expressions.
+	 * A {@code HashMap<String,String>} mapping variables to type expressions.
 	 */
-	public static class TypeMapBuilder extends LinkedHashMap<String, Expression> {
+	public static class TypeMapBuilder extends LinkedHashMap<String, String> {
 		private static final long serialVersionUID = 1L;
 
 		private TypeMapBuilder() {
@@ -59,20 +56,7 @@ public class Types {
 		 * @return this
 		 */
 		public Types.TypeMapBuilder map(String variableName, String typeName) {
-			return map(variableName, Expression.App(typeName, new Expression[] {}));
-		}
-
-		/**
-		 * Add the given entry to the type map.
-		 * 
-		 * @param variableName
-		 *            the variable
-		 * @param typeExpression
-		 *            the type name
-		 * @return this
-		 */
-		public Types.TypeMapBuilder map(String variableName, Expression typeExpression) {
-			put(variableName, typeExpression);
+			put(variableName, typeName);
 			return this;
 		}
 	}
