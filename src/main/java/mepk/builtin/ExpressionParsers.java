@@ -13,8 +13,25 @@ import org.codehaus.jparsec.Scanners;
 import org.codehaus.jparsec.functors.Map;
 import org.codehaus.jparsec.functors.Pair;
 
+/**
+ * JParsec-based parsers for expression.
+ * <p>
+ * Example: {@code ExpressionParsers.expression().parse("(> (+ x 1) 0)")}.
+ */
 public class ExpressionParsers {
 
+	/**
+	 * This constructor should not be used: this class contains only static
+	 * methods.
+	 */
+	private ExpressionParsers() {
+	}
+
+	/**
+	 * A JParsec parser for an expression consisting of just a variable.
+	 * 
+	 * @return the parser
+	 */
 	public static Parser<Expression> variable() {
 		return IDENTIFIER.map(new Map<String, Expression>() {
 			@Override
@@ -24,10 +41,11 @@ public class ExpressionParsers {
 		});
 	}
 
-	private static Parser<String> token() {
-		return Scanners.notAmong("() \t\n\r").many1().source();
-	}
-
+	/**
+	 * A JParsec parser for an application expression.
+	 * 
+	 * @return the parser
+	 */
 	public static Parser<Expression> application() {
 		final Parser.Reference<Expression> expressionRef = new Parser.Reference<Expression>();
 		Parser<List<Expression>> exprList = expressionRef.lazy().sepBy1(WHITESPACES);
@@ -39,12 +57,24 @@ public class ExpressionParsers {
 				return tuple.b == null ? App(tuple.a) : App(tuple.a, tuple.b.toArray(new Expression[tuple.b.size()]));
 			}
 		});
+		// NOTE the duplication with method expression(), which seems
+		// unavoidable because of the mutual recursion.
 		expressionRef.set(variable().or(application));
 		return application;
 	}
 
+	/**
+	 * A JParsec parser for an expression, i.e., a variable or an application of
+	 * a constant to a list of zero or more expressions.
+	 * 
+	 * @return the parser
+	 */
 	public static Parser<Expression> expression() {
 		return variable().or(application());
+	}
+
+	private static Parser<String> token() {
+		return Scanners.notAmong("() \t\n\r").many1().source();
 	}
 
 }
