@@ -19,9 +19,9 @@ import org.codehaus.jparsec.functors.Map;
 import org.codehaus.jparsec.functors.Pair;
 
 /**
- * JParsec-based parsers for expression.
+ * Parsers for expressions, etc.
  * <p>
- * Example: {@code MEPKParsers.Expr("(> (+ x 1) 0)")}.
+ * Example: {@code MEPKParsers.Expr("(> (+ x (1)) (0))")}.
  */
 public class MEPKParsers {
 
