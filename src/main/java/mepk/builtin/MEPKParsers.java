@@ -11,6 +11,9 @@ import org.codehaus.jparsec.Parsers;
 import org.codehaus.jparsec.Scanners;
 import org.codehaus.jparsec.Terminals;
 import org.codehaus.jparsec.Token;
+import org.codehaus.jparsec.TokenMap;
+import org.codehaus.jparsec.Tokens;
+import org.codehaus.jparsec.Tokens.Fragment;
 import org.codehaus.jparsec.error.ParserException;
 import org.codehaus.jparsec.functors.Map;
 import org.codehaus.jparsec.functors.Pair;
@@ -31,14 +34,29 @@ public class MEPKParsers {
 	private static final Parser<Expression> EXPRESSION;
 
 	static {
+		Parser<Fragment> CONSTANT_TOKENIZER = Scanners.notAmong(" ()").many1().source().map(new Map<String, Fragment>() {
+			@Override
+			public Fragment map(String from) {
+				return Tokens.fragment(from, "constant");
+			}
+		});
+
+		Parser<String> CONSTANT_PARSER = Parsers.token(new TokenMap<String>() {
+			@Override
+			public String map(Token token) {
+				Fragment f = (Fragment) token.value();
+				return f.tag().equals("constant") ? f.text() : null;
+			}
+		}).label("constant");
+
 		Parser<?> ignored = Parsers.or(Scanners.lineComment(";"), Scanners.WHITESPACES);
 
-		Parser<?> idTokenizer = Parsers.or(Terminals.Identifier.TOKENIZER, Terminals.StringLiteral.SINGLE_QUOTE_TOKENIZER);
-		Parser<?> tokenizer = Parsers.or(OPERATORS.tokenizer(), idTokenizer);
+		Parser<?> tokenizer = Parsers.or(OPERATORS.tokenizer(), Terminals.StringLiteral.SINGLE_QUOTE_TOKENIZER,
+				Terminals.Identifier.TOKENIZER, CONSTANT_TOKENIZER);
 
 		Parser.Reference<Expression> exprRef = new Parser.Reference<>();
-		Parser<String> identifier_ = Terminals.Identifier.PARSER.or(Terminals.StringLiteral.PARSER);
-		Parser<Expression> application_ = Parsers.pair(identifier_, exprRef.lazy().many()).between(term("("), term(")"))
+		Parser<String> constant_ = Terminals.StringLiteral.PARSER.or(CONSTANT_PARSER);
+		Parser<Expression> application_ = Parsers.pair(constant_, exprRef.lazy().many()).between(term("("), term(")"))
 				.map(new Map<Pair<String, List<Expression>>, Expression>() {
 					@Override
 					public Expression map(Pair<String, List<Expression>> from) {
@@ -46,7 +64,7 @@ public class MEPKParsers {
 					}
 				});
 
-		Parser<Expression> variable_ = identifier_.map(
+		Parser<Expression> variable_ = Terminals.Identifier.PARSER.or(Terminals.StringLiteral.PARSER).map(
 				new Map<String, Expression>() {
 					@Override
 					public Expression map(String from) {
