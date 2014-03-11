@@ -5,7 +5,7 @@ package mepk.kernel;
  * correctly.
  */
 @SuppressWarnings("serial")
-public class VerificationException extends MEPKException {
+public class MEPKVerificationException extends MEPKException {
 
 	/**
 	 * Create new instance.
@@ -13,7 +13,7 @@ public class VerificationException extends MEPKException {
 	 * @param message
 	 *            the exception message.
 	 */
-	public VerificationException(String message) {
+	public MEPKVerificationException(String message) {
 		super(message);
 	}
 

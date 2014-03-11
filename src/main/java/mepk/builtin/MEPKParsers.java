@@ -11,15 +11,16 @@ import org.codehaus.jparsec.Parsers;
 import org.codehaus.jparsec.Scanners;
 import org.codehaus.jparsec.Terminals;
 import org.codehaus.jparsec.Token;
+import org.codehaus.jparsec.error.ParserException;
 import org.codehaus.jparsec.functors.Map;
 import org.codehaus.jparsec.functors.Pair;
 
 /**
  * JParsec-based parsers for expression.
  * <p>
- * Example: {@code ExpressionParsers.expression().parse("(> (+ x 1) 0)")}.
+ * Example: {@code MEPKParsers.Expr("(> (+ x 1) 0)")}.
  */
-public class ExpressionParsers {
+public class MEPKParsers {
 
 	private static final Terminals OPERATORS = Terminals.operators("(", ")");
 
@@ -27,13 +28,7 @@ public class ExpressionParsers {
 		return OPERATORS.token(tokenName);
 	}
 
-	public static final Parser<Expression> VARIABLE;
-
-	public static final Parser<Expression> APPLICATION;
-
-	private static final Parser<Expression> EXPRESSION_;
-
-	public static final Parser<Expression> EXPRESSION;
+	private static final Parser<Expression> EXPRESSION;
 
 	static {
 		Parser<?> ignored = Parsers.or(Scanners.lineComment(";"), Scanners.WHITESPACES);
@@ -58,19 +53,36 @@ public class ExpressionParsers {
 						return Var(from);
 					}
 				});
-		EXPRESSION_ = application_.or(variable_);
-		exprRef.set(EXPRESSION_);
+		Parser<Expression> expression_ = application_.or(variable_);
+		exprRef.set(expression_);
 
-		VARIABLE = variable_.from(tokenizer, ignored.skipMany());
-		APPLICATION = application_.from(tokenizer, ignored.skipMany());
-		EXPRESSION = EXPRESSION_.from(tokenizer, ignored.skipMany());
+		EXPRESSION = expression_.from(tokenizer, ignored.skipMany());
+	}
+
+	/**
+	 * Parse the given expression string (in "GHilbert format") to an
+	 * {@link Expression} instance.
+	 * 
+	 * @param expressionAsString
+	 *            the string to parse
+	 * @return the parsed expression
+	 * @throws MEPKParseException
+	 *             if parsing failed
+	 */
+	public static Expression Expr(String expressionAsString) {
+		try {
+			return EXPRESSION.parse(expressionAsString);
+		} catch (ParserException ex) {
+			throw new MEPKParseException(ex);
+		}
 	}
 
 	/**
 	 * This constructor should not be used: this class contains only static
 	 * methods.
 	 */
-	private ExpressionParsers() {
+	private MEPKParsers() {
+		assert false : "unreached";
 	}
 
 }

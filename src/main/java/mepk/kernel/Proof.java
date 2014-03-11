@@ -75,10 +75,10 @@ public abstract class Proof {
 	 * Verify this proof, by checking its {@link Justification justifications}
 	 * and recursively verifying their {@link Justification#getProof() proofs}.
 	 * 
-	 * @throws VerificationException
+	 * @throws MEPKVerificationException
 	 *             if the verification fails.
 	 */
-	public final void verify() throws VerificationException {
+	public final void verify() throws MEPKVerificationException {
 		// this is the verification algorithm in very rough form,
 		// in recursive form, for easier debugging
 		// (in practice one doesn't want to blow up the Java stack arbitrarily)
@@ -86,7 +86,7 @@ public abstract class Proof {
 		new ExpandedAbbreviationsProof(this).verifyStatementsAreJustified(this.getGrounded());
 	}
 
-	protected final void verifyStatementsAreJustified(Set<Statement> grounded) throws VerificationException {
+	protected final void verifyStatementsAreJustified(Set<Statement> grounded) throws MEPKVerificationException {
 		if (!this.getAbbreviations().isEmpty()) {
 			throw new MEPKException("illegal use of verification algorithm: did not expect abbreviations "
 					+ this.getAbbreviations());
@@ -96,21 +96,21 @@ public abstract class Proof {
 			Justification justification = getJustificationFor(s);
 			if (justification == null) {
 				if (!this.getGrounding().contains(s)) {
-					throw new VerificationException("no justification for " + s);
+					throw new MEPKVerificationException("no justification for " + s);
 				}
 			} else {
 				Proof subproof = justification.getProof();
 				ProofStep proofStep = justification.getProofStep();
 				if (!proofStep.getGrounded1().equals(s)) {
-					throw new VerificationException("incorrect justification for " + s + ": justifying proof step should conclude "
+					throw new MEPKVerificationException("incorrect justification for " + s + ": justifying proof step should conclude "
 							+ s + " but did conclude " + proofStep.getGrounded1());
 				}
 				if (!subproof.getGrounded().containsAll(proofStep.getGrounding())) {
-					throw new VerificationException("incorrect justification for " + s
+					throw new MEPKVerificationException("incorrect justification for " + s
 							+ ": justifying proof does not prove everything that is required for the proof step");
 				}
 				if (!this.getGrounding().containsAll(subproof.getGrounding())) {
-					throw new VerificationException("incorrect justification for " + s
+					throw new MEPKVerificationException("incorrect justification for " + s
 							+ ": justifying proof uses more assumptions than proof being verified");
 				}
 				subproof.verifyStatementsAreJustified(proofStep.getGrounding());

@@ -5,6 +5,6 @@
  * always succeeds for a {@code TrustedProof};
  * but in case of doubt you can always {@code verify()} that. 
  * <p>
- * This package also contains a set of parsers in {@link mepk.builtin.ExpressionParsers}.
+ * This package also contains a set of parsers in {@link mepk.builtin.MEPKParsers}.
  */
 package mepk.builtin;
