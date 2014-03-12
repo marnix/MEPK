@@ -2,6 +2,7 @@ package mepk.kernel;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -18,8 +19,41 @@ public final class DVRSet {
 	/** The empty DVRSet. */
 	public static final DVRSet EMPTY = new DVRSet(new HashMap<String, Set<String>>());
 
+	/**
+	 * Create a DVRSet.
+	 * 
+	 * @param varNames
+	 *            the distinct variables
+	 * @return the set
+	 */
 	public static DVRSet Distinct(String... varNames) {
 		return DVRSet.EMPTY.andDistinct(varNames);
+	}
+
+	/**
+	 * Create a DVRSet.
+	 * 
+	 * @param varNames
+	 *            the distinct variables
+	 * @return the set
+	 */
+	public static DVRSet Distinct(List<String> varNames) {
+		return Distinct(varNames.toArray(new String[varNames.size()]));
+	}
+
+	/**
+	 * Create the union of multiple DVRSets.
+	 * 
+	 * @param dvrSets
+	 *            the DVRSets to be merged
+	 * @return the union DVRSet
+	 */
+	public static DVRSet Distinct(Iterable<DVRSet> dvrSets) {
+		DVRSet result = DVRSet.EMPTY;
+		for (DVRSet dvrSet : dvrSets) {
+			result = result.andDistinct(dvrSet);
+		}
+		return result;
 	}
 
 	/**

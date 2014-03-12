@@ -3,6 +3,7 @@ package mepk.test;
 import static org.junit.Assert.*;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import mepk.kernel.DVRSet;
 import mepk.kernel.MEPKException;
@@ -81,6 +82,12 @@ public class TestDVRSet {
 		assertTrue(xyxz1.equals(xyxz2));
 		assertTrue(xyxz2.equals(xyxz1));
 		assertEquals(DVRSet.Distinct("x", "y", "z"), xyxz1.andDistinct("y", "z"));
+	}
+
+	@Test
+	public void testUnion() {
+		assertEquals(DVRSet.EMPTY, DVRSet.Distinct(Collections.<DVRSet> emptyList()));
+		assertEquals(DVRSet.Distinct("x", "y"), DVRSet.Distinct(Arrays.asList(DVRSet.Distinct("y", "x"))));
 	}
 
 	@Test
