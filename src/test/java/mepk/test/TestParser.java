@@ -40,8 +40,8 @@ public class TestParser {
 		// assertEquals(Stat(Distinct("y", "x"), Arrays.<Expression> asList(),
 		// Expr("(true)")), Stat("DISTINCT (x y) ==> (true)"));
 		assertEquals(Stat(Arrays.asList(Expr("(false)")), Expr("(true)")), Stat("(false) ==> (true)"));
-		assertEquals(Stat(Distinct("y", "x"), Arrays.asList(Expr("(Nat x)")), Expr("(Real x)")),
-				Stat("DISTINCT (x y) AND (Nat x) ==> (Real x)"));
+		assertEquals(Stat(Distinct("y", "x", "z"), Arrays.asList(Expr("(Nat x)")), Expr("(Real x)")),
+				Stat("DISTINCT (x y) AND DISTINCT (x z) AND DISTINCT (z y) AND (Nat x) ==> (Real x)"));
 
 		Stat("DISTINCT (x y) AND (Nat x) AND (Real y) AND (> x y) ==> (Real x)");
 	}
