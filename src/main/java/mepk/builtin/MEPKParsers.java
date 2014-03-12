@@ -5,6 +5,7 @@ import static mepk.kernel.Expression.*;
 import java.util.List;
 
 import mepk.kernel.Expression;
+import mepk.kernel.Statement;
 
 import org.codehaus.jparsec.Parser;
 import org.codehaus.jparsec.Parsers;
@@ -33,30 +34,33 @@ public class MEPKParsers {
 
 	private static final Parser<Expression> EXPRESSION;
 
+	private static final Parser<Statement> STATEMENT;
+
 	static {
-		Parser<Fragment> CONSTANT_TOKENIZER = Scanners.notAmong(" ()").many1().source().map(new Map<String, Fragment>() {
+		Parser<Fragment> wordTokenizer = Scanners.notAmong(" ()").many1().source().map(new Map<String, Fragment>() {
 			@Override
 			public Fragment map(String from) {
-				return Tokens.fragment(from, "constant");
+				return Tokens.fragment(from, "word");
 			}
 		});
 
-		Parser<String> CONSTANT_PARSER = Parsers.token(new TokenMap<String>() {
+		Parser<String> wordParser_ = Parsers.token(new TokenMap<String>() {
 			@Override
 			public String map(Token token) {
 				Fragment f = (Fragment) token.value();
-				return f.tag().equals("constant") ? f.text() : null;
+				return f.tag().equals("word") ? f.text() : null;
 			}
-		}).label("constant");
+		}); // TODO: label while _overriding_ the original label
 
 		Parser<?> ignored = Parsers.or(Scanners.lineComment(";"), Scanners.WHITESPACES);
 
-		Parser<?> tokenizer = Parsers.or(OPERATORS.tokenizer(), Terminals.StringLiteral.SINGLE_QUOTE_TOKENIZER,
-				Terminals.Identifier.TOKENIZER, CONSTANT_TOKENIZER);
+		Parser<?> tokenizer = Parsers.or(OPERATORS.tokenizer(), Terminals.StringLiteral.SINGLE_QUOTE_TOKENIZER, wordTokenizer);
 
 		Parser.Reference<Expression> exprRef = new Parser.Reference<>();
-		Parser<String> constant_ = Terminals.StringLiteral.PARSER.or(CONSTANT_PARSER);
-		Parser<Expression> application_ = Parsers.pair(constant_, exprRef.lazy().many()).between(term("("), term(")"))
+		Parser<String> identifier_ = Terminals.StringLiteral.PARSER.or(wordParser_);
+		// TODO: label StringLiteral.PARSER while _overriding_ the original
+		// label
+		Parser<Expression> application_ = Parsers.pair(identifier_, exprRef.lazy().many()).between(term("("), term(")"))
 				.map(new Map<Pair<String, List<Expression>>, Expression>() {
 					@Override
 					public Expression map(Pair<String, List<Expression>> from) {
@@ -64,17 +68,18 @@ public class MEPKParsers {
 					}
 				});
 
-		Parser<Expression> variable_ = Terminals.Identifier.PARSER.or(Terminals.StringLiteral.PARSER).map(
-				new Map<String, Expression>() {
-					@Override
-					public Expression map(String from) {
-						return Var(from);
-					}
-				});
+		Parser<Expression> variable_ = identifier_.map(new Map<String, Expression>() {
+			@Override
+			public Expression map(String from) {
+				return Var(from);
+			}
+		});
 		Parser<Expression> expression_ = application_.or(variable_);
 		exprRef.set(expression_);
 
 		EXPRESSION = expression_.from(tokenizer, ignored.skipMany());
+
+		STATEMENT = null;
 	}
 
 	/**
@@ -90,6 +95,23 @@ public class MEPKParsers {
 	public static Expression Expr(String expressionAsString) {
 		try {
 			return EXPRESSION.parse(expressionAsString);
+		} catch (ParserException ex) {
+			throw new MEPKParseException(ex);
+		}
+	}
+
+	/**
+	 * Parse the given statement string to a {@link Statement} instance.
+	 * 
+	 * @param statementAsString
+	 *            the string to parse
+	 * @return the parsed statement
+	 * @throws MEPKParseException
+	 *             if parsing failed
+	 */
+	public static Statement Stat(String statementAsString) {
+		try {
+			return STATEMENT.parse(statementAsString);
 		} catch (ParserException ex) {
 			throw new MEPKParseException(ex);
 		}
