@@ -18,13 +18,13 @@ public class TestDVRSet {
 
 	@Test
 	public void test2() {
-		assertEquals(DVRSet.EMPTY, DVRSet.EMPTY.add(DVRSet.EMPTY));
+		assertEquals(DVRSet.EMPTY, DVRSet.EMPTY.andDistinct(DVRSet.EMPTY));
 	}
 
 	@Test
 	public void test3() {
 		try {
-			DVRSet.EMPTY.add("x", "x");
+			DVRSet.Distinct("x", "x");
 			fail();
 		} catch (MEPKException e) {
 			AssertUtil.assertTrueElseException(e.getMessage().contains("Variable 'x' may not be disjoint with itself"), e);
@@ -33,9 +33,9 @@ public class TestDVRSet {
 
 	@Test
 	public void test4() {
-		DVRSet d = DVRSet.EMPTY.add("x", "y");
+		DVRSet d = DVRSet.Distinct("x", "y");
 		try {
-			d.add("y", "y");
+			d.andDistinct("y", "y");
 			fail();
 		} catch (MEPKException e) {
 			AssertUtil.assertTrueElseException(e.getMessage().contains("Variable 'y' may not be disjoint with itself"), e);
@@ -44,9 +44,9 @@ public class TestDVRSet {
 
 	@Test
 	public void testEquals() {
-		DVRSet d1 = DVRSet.EMPTY.add("x", "y");
-		DVRSet d2 = DVRSet.EMPTY.add("x", "y");
-		DVRSet d3 = DVRSet.EMPTY.add("y", "x");
+		DVRSet d1 = DVRSet.Distinct("x", "y");
+		DVRSet d2 = DVRSet.Distinct("x", "y");
+		DVRSet d3 = DVRSet.Distinct("y", "x");
 		assertTrue(d1.equals(d2));
 		assertTrue(d1.equals(d3));
 		assertTrue(d2.equals(d1));
@@ -58,53 +58,53 @@ public class TestDVRSet {
 	@Test
 	public void testAddSets() {
 		DVRSet d1 = DVRSet.EMPTY;
-		DVRSet d2 = d1.add("x", "y");
-		DVRSet d3 = d1.add("y", "x");
-		assertEquals(d2, d1.add(d2));
-		assertEquals(d2, d2.add(d1));
-		assertEquals(d2, d1.add(d3));
-		assertEquals(d2, d3.add(d1));
-		assertEquals(d2, d2.add(d3));
-		assertEquals(d2, d3.add(d2));
-		assertEquals(d3, d1.add(d3));
-		assertEquals(d3, d3.add(d1));
-		assertEquals(d3, d2.add(d3));
-		assertEquals(d3, d3.add(d2));
+		DVRSet d2 = d1.andDistinct("x", "y");
+		DVRSet d3 = d1.andDistinct("y", "x");
+		assertEquals(d2, d1.andDistinct(d2));
+		assertEquals(d2, d2.andDistinct(d1));
+		assertEquals(d2, d1.andDistinct(d3));
+		assertEquals(d2, d3.andDistinct(d1));
+		assertEquals(d2, d2.andDistinct(d3));
+		assertEquals(d2, d3.andDistinct(d2));
+		assertEquals(d3, d1.andDistinct(d3));
+		assertEquals(d3, d3.andDistinct(d1));
+		assertEquals(d3, d2.andDistinct(d3));
+		assertEquals(d3, d3.andDistinct(d2));
 	}
 
 	@Test
 	public void testAdd() {
-		DVRSet xy = DVRSet.EMPTY.add("x", "y");
-		DVRSet xz = DVRSet.EMPTY.add("x", "z");
-		DVRSet xyxz1 = xy.add("x", "z");
-		DVRSet xyxz2 = xy.add(xz);
+		DVRSet xy = DVRSet.Distinct("x", "y");
+		DVRSet xz = DVRSet.Distinct("x", "z");
+		DVRSet xyxz1 = xy.andDistinct("x", "z");
+		DVRSet xyxz2 = xy.andDistinct(xz);
 		assertTrue(xyxz1.equals(xyxz2));
 		assertTrue(xyxz2.equals(xyxz1));
-		assertEquals(DVRSet.EMPTY.add("x", "y", "z"), xyxz1.add("y", "z"));
+		assertEquals(DVRSet.Distinct("x", "y", "z"), xyxz1.andDistinct("y", "z"));
 	}
 
 	@Test
 	public void testSubstitute1() {
-		DVRSet xy = DVRSet.EMPTY.add("x", "y");
-		assertEquals(DVRSet.EMPTY.add("x", "z"), xy.substitute("y", Arrays.asList("z")));
+		DVRSet xy = DVRSet.Distinct("x", "y");
+		assertEquals(DVRSet.Distinct("x", "z"), xy.substitute("y", Arrays.asList("z")));
 	}
 
 	@Test
 	public void testSubstitute2() {
-		DVRSet xy = DVRSet.EMPTY.add("x", "y");
+		DVRSet xy = DVRSet.Distinct("x", "y");
 		assertEquals(xy, xy.substitute("y", Arrays.asList("y")));
 	}
 
 	@Test
 	public void testSubstitute3() {
-		DVRSet xy = DVRSet.EMPTY.add("x", "y");
+		DVRSet xy = DVRSet.Distinct("x", "y");
 		assertEquals(DVRSet.EMPTY, xy.substitute("y", Arrays.<String> asList()));
 	}
 
 	@Test
 	public void testSubstitute4() {
-		DVRSet xy = DVRSet.EMPTY.add("x", "y");
-		assertEquals(DVRSet.EMPTY.add("x", "a").add("x", "b"), xy.substitute("y", Arrays.asList("a", "b")));
+		DVRSet xy = DVRSet.Distinct("x", "y");
+		assertEquals(DVRSet.Distinct("x", "a").andDistinct("x", "b"), xy.substitute("y", Arrays.asList("a", "b")));
 	}
 
 	@Test
@@ -114,7 +114,7 @@ public class TestDVRSet {
 
 	@Test
 	public void testSubstitute6() {
-		DVRSet xy = DVRSet.EMPTY.add("x", "y");
+		DVRSet xy = DVRSet.Distinct("x", "y");
 		try {
 			xy.substitute("y", Arrays.asList("x"));
 			fail();

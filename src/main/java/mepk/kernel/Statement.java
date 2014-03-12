@@ -199,7 +199,7 @@ public final class Statement {
 	public Statement weaken(DVRSet addedDVRs, Expression... addedHypotheses) {
 		List<Expression> allHyps = new ArrayList<Expression>(hypotheses);
 		allHyps.addAll(Arrays.asList(addedHypotheses));
-		DVRSet d = dvrs.add(addedDVRs);
+		DVRSet d = dvrs.andDistinct(addedDVRs);
 		return Stat(d, allHyps, conclusion);
 	}
 

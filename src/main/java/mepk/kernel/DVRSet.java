@@ -18,6 +18,10 @@ public final class DVRSet {
 	/** The empty DVRSet. */
 	public static final DVRSet EMPTY = new DVRSet(new HashMap<String, Set<String>>());
 
+	public static DVRSet Distinct(String... varNames) {
+		return DVRSet.EMPTY.andDistinct(varNames);
+	}
+
 	/**
 	 * If variables x and y are distinct, then for key "x" the set contains "y",
 	 * and vice versa.
@@ -122,7 +126,7 @@ public final class DVRSet {
 	 *            the DVRs to be added
 	 * @return the new DVR set
 	 */
-	public DVRSet add(DVRSet addedDVRs) {
+	public DVRSet andDistinct(DVRSet addedDVRs) {
 		// copy the existing map
 		Map<String, Set<String>> newDVRMap = new HashMap<String, Set<String>>(dvrMap);
 
@@ -151,7 +155,7 @@ public final class DVRSet {
 	 *            the variables which should be distinct.
 	 * @return the new DVR set
 	 */
-	public DVRSet add(String... varNames) {
+	public DVRSet andDistinct(String... varNames) {
 		// copy the existing map
 		Map<String, Set<String>> newDVRMap = new HashMap<String, Set<String>>();
 		for (String key : dvrMap.keySet()) {

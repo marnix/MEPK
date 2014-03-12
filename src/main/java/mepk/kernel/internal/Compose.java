@@ -42,9 +42,9 @@ public class Compose implements ProofStep.Internal {
 		for (Statement s : statements) {
 			hypotheses.addAll(s.getHypotheses());
 			statementsConclusions.add(s.getConclusion());
-			dvrs.add(s.getDVRs());
+			dvrs.andDistinct(s.getDVRs());
 		}
-		dvrs.add(statement.getDVRs());
+		dvrs.andDistinct(statement.getDVRs());
 
 		if (!statement.getHypotheses().containsAll(statementsConclusions)) {
 			throw new MEPKException(String.format(
