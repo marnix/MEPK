@@ -1,5 +1,6 @@
 package mepk.test;
 
+import static mepk.builtin.MEPKParsers.*;
 import static mepk.kernel.Expression.*;
 import static mepk.kernel.Statement.*;
 import static mepk.test.AssertUtil.*;
@@ -97,18 +98,26 @@ public class Test1 {
 
 	@Test
 	public void test6b() throws Throwable {
-		Statement sp = Stat(Arrays.asList(Expression.Type("P", "bool"), Var("P")), Var("P"));
-		Statement sq = Stat(Arrays.asList(Expression.Type("Q", "bool"), Var("Q")), Var("Q"));
-		Statement sr = Stat(Arrays.asList(Expression.Type("R", "bool"), Var("R")), Var("R"));
-		ProofStep pq = ProofStep.Substitute(sp, "P", Var("Q"), Types.EmptyMap());
-		ProofStep qr = ProofStep.Substitute(sq, "Q", Var("R"), Types.EmptyMap());
-		ProofStep rs = ProofStep.Substitute(sr, "R", Var("S"), Types.EmptyMap());
+		Statement sp = Stat("(bool P) AND P ==> P");
+		Statement sq = Stat("(bool Q) AND Q ==> Q");
+		Statement sr = Stat("(bool R) AND R ==> R");
+		ProofStep pq = ProofStep.Substitute(sp, "P", Expr("Q"), Types.EmptyMap());
+		ProofStep qr = ProofStep.Substitute(sq, "Q", Expr("R"), Types.EmptyMap());
+		ProofStep rs = ProofStep.Substitute(sr, "R", Expr("S"), Types.EmptyMap());
 
 		Proof ps1 = TrustedProof.Seq(pq, TrustedProof.Seq(qr, rs));
 		ps1.verify();
 
 		Proof ps2 = TrustedProof.Seq(TrustedProof.Seq(pq, qr), rs);
 		ps2.verify();
+	}
+
+	@Test
+	public void testSubstituteInDistinctVariables() throws Throwable {
+		Statement s = Stat("DISTINCT (x y) AND (Real x) AND (Real y) ==> (Real (+ x y))");
+		Statement t = s.substitute("x", Expr("(+ x1 x2)"), Types.map("x1", "Nat").map("x2", "Int"));
+		assertEquals(Stat("DISTINCT (x1 y) AND DISTINCT (x2 y) AND (Nat x1) AND (Int x2) AND (Real (+ x1 x2)) AND (Real y)"
+				+ " ==> (Real (+ (+ x1 x2) y))"), t);
 	}
 
 	@Test
