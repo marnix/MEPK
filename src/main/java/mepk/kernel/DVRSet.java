@@ -69,10 +69,12 @@ public final class DVRSet {
 		try {
 			assert false; // only perform the loops below if assertions are on
 		} catch (AssertionError ex) {
-			for (String k : dvrMap.keySet()) {
-				assert !dvrMap.get(k).contains(k);
-				for (String v : dvrMap.get(k)) {
-					assert dvrMap.get(v).contains(k);
+			for (Entry<String, Set<String>> kv : dvrMap.entrySet()) {
+				String var = kv.getKey();
+				Set<String> distinctsFromVar = kv.getValue();
+				assert !distinctsFromVar.contains(var);
+				for (String distinctFromVar : kv.getValue()) {
+					assert dvrMap.get(distinctFromVar).contains(var);
 				}
 			}
 		}

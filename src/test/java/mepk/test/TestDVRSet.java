@@ -36,7 +36,8 @@ public class TestDVRSet {
 	public void test4() {
 		DVRSet d = DVRSet.Distinct("x", "y");
 		try {
-			d.andDistinct("y", "y");
+			@SuppressWarnings("unused")
+			DVRSet yy = d.andDistinct("y", "y");
 			fail();
 		} catch (MEPKException e) {
 			AssertUtil.assertTrueElseException(e.getMessage().contains("Variable 'y' may not be disjoint with itself"), e);
@@ -123,7 +124,8 @@ public class TestDVRSet {
 	public void testSubstitute6() {
 		DVRSet xy = DVRSet.Distinct("x", "y");
 		try {
-			xy.substitute("y", Arrays.asList("x"));
+			@SuppressWarnings("unused")
+			DVRSet xx = xy.substitute("y", Arrays.asList("x"));
 			fail();
 		} catch (MEPKException e) {
 			AssertUtil.assertTrueElseException(e.getMessage().contains("Variable 'x' may not be disjoint with itself"), e);
