@@ -1,12 +1,7 @@
 package mepk.test;
 
-import static mepk.kernel.Expression.*;
-import static mepk.kernel.Statement.*;
+import static mepk.builtin.MEPKParsers.*;
 import static org.junit.Assert.*;
-
-import java.util.Arrays;
-
-import mepk.kernel.Expression;
 import mepk.kernel.ProofStep;
 import mepk.kernel.Statement;
 
@@ -16,13 +11,20 @@ public class TestCompose {
 
 	@Test
 	public void test() {
-		Statement mp1 = Stat(Arrays.asList(Type("P", "bool"), Type("Q", "bool"), Var("P"), Expression.AppV("=>", "P","Q")), Var("Q"));
-		Statement mp2 = Stat(Arrays.asList(Type("Q", "bool"), Type("R", "bool"), Var("Q"), Expression.AppV("=>", "Q","R")), Var("R"));
+		Statement mp1 = Stat("(bool P) AND (bool Q) AND P AND (=> P Q) ==> Q");
+		Statement mp2 = Stat("(bool Q) AND (bool R) AND Q AND (=> Q R) ==> R");
 		ProofStep actual = ProofStep.Compose(mp2, mp1);
-		Statement expected = Stat(
-				Arrays.asList(Type("Q", "bool"), Type("R", "bool"), Type("P", "bool"), Type("Q", "bool"), Var("P"),
-						Expression.AppV("=>", "P", "Q"), Expression.AppV("=>", "Q", "R")), Var("R"));
+		Statement expected = Stat("(bool Q) AND (bool R) AND (bool P) AND (bool Q) AND P AND (=> P Q) AND (=> Q R) ==> R");
 		assertEquals(expected, actual.getGrounded1());
 	}
 
+	@Test
+	public void test2() {
+		Statement mp1 = Stat("DISTINCT (P Q) AND (bool P) AND (bool Q) AND P AND (=> P Q) ==> Q");
+		Statement mp2 = Stat("DISTINCT (Q R) AND (bool Q) AND (bool R) AND Q AND (=> Q R) ==> R");
+		ProofStep actual = ProofStep.Compose(mp2, mp1);
+		Statement expected = Stat("DISTINCT (R Q) AND DISTINCT (P Q) AND"
+				+ " (bool Q) AND (bool R) AND (bool P) AND (bool Q) AND P AND (=> P Q) AND (=> Q R) ==> R");
+		assertEquals(expected, actual.getGrounded1());
+	}
 }

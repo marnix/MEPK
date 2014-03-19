@@ -42,15 +42,14 @@ public class Compose implements ProofStep.Internal {
 		for (Statement s : statements) {
 			hypotheses.addAll(s.getHypotheses());
 			statementsConclusions.add(s.getConclusion());
-			dvrs.andDistinct(s.getDVRs());
+			dvrs = dvrs.andDistinct(s.getDVRs());
 		}
-		dvrs.andDistinct(statement.getDVRs());
+		dvrs = dvrs.andDistinct(statement.getDVRs());
 
 		if (!statement.getHypotheses().containsAll(statementsConclusions)) {
 			throw new MEPKException(String.format(
 					"Conclusions of sub-statements, %s, should be a subset of the hypotheses of composing statement, %s",
-					statementsConclusions,
-					statement.getHypotheses()));
+					statementsConclusions, statement.getHypotheses()));
 		}
 		HashSet<Expression> statementHypothesesWithoutStatementsConclusions = new HashSet<Expression>(statement.getHypotheses());
 		statementHypothesesWithoutStatementsConclusions.removeAll(statementsConclusions);
