@@ -79,10 +79,11 @@ public abstract class Proof {
 	 *             if the verification fails.
 	 */
 	public final void verify() throws MEPKVerificationException {
-		// this is the verification algorithm in very rough form,
-		// in recursive form, for easier debugging
-		// (in practice one doesn't want to blow up the Java stack arbitrarily)
-		// TODO: change the verification to a non-recursive implementation?
+		// This is the verification algorithm, in recursive form, for easier
+		// debugging. (One wouldn't want to blow up the Java stack arbitrarily,
+		// so in the future we may want to change the verification to a
+		// non-recursive implementation. However, it doesn't seem likely in
+		// practice that we will be hitting JVM limits any time soon.)
 		new ExpandedAbbreviationsProof(this).verifyStatementsAreJustified(this.getGrounded());
 	}
 
@@ -102,8 +103,8 @@ public abstract class Proof {
 				Proof subproof = justification.getProof();
 				ProofStep proofStep = justification.getProofStep();
 				if (!proofStep.getGrounded1().equals(s)) {
-					throw new MEPKVerificationException("incorrect justification for " + s + ": justifying proof step should conclude "
-							+ s + " but did conclude " + proofStep.getGrounded1());
+					throw new MEPKVerificationException("incorrect justification for " + s
+							+ ": justifying proof step should conclude " + s + " but did conclude " + proofStep.getGrounded1());
 				}
 				if (!subproof.getGrounded().containsAll(proofStep.getGrounding())) {
 					throw new MEPKVerificationException("incorrect justification for " + s

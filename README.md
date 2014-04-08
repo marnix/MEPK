@@ -83,6 +83,3 @@ Implementation issues:
  - Change method names so that every Set<Statement> is called a 'theory', e.g.,
    getGrounding() -> getGroundingTheory()?  Con: The current names are short,
    and that is good.
-   
- - Implement a non-recursive version of the verification mechanism, to prevent
-   stack overflow.
