@@ -82,4 +82,4 @@ Implementation issues:
  
  - Change method names so that every Set<Statement> is called a 'theory', e.g.,
    getGrounding() -> getGroundingTheory()?  Con: The current names are short,
-   and that is good.
+   and that is good.  For now I'll keep the current behavior.
