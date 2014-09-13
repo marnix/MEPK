@@ -20,7 +20,6 @@ public class AssertUtil {
 
 	public static <T> void assertSubset(Set<T> a, Set<T> b) {
 		Assert.assertTrue(b.containsAll(a));
-		// TODO: appropriate message, preferably lazily computed
 	}
 
 }
