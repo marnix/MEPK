@@ -121,12 +121,22 @@ public class Test1 {
 	}
 
 	@Test
+	public void testWeakenNoChange() throws Throwable {
+		Statement sp = Stat("(Real x) AND (Nat x) ==> (= x x)");
+		Statement sq = Stat("(Nat x) AND (Real x) ==> (= x x)");
+		ProofStep p = ProofStep.Weaken(sp, DVRSet.EMPTY);
+		assertEquals(Collections.singleton(sp), p.getGrounding());
+		assertEquals(sq, p.getGrounded1());
+	}
+
+	@Test
 	public void testWeaken() throws Throwable {
 		Statement sp = Stat(Arrays.asList(Expression.Type("P", "bool"), Var("P")), Var("P"));
-		Statement spq = Stat(Arrays.asList(Expression.Type("P", "bool"), Var("P"), Expression.Type("Q", "bool"), Var("Q")),
-				Var("P"));
+
 		ProofStep w = ProofStep.Weaken(sp, DVRSet.EMPTY, Expression.Type("Q", "bool"), Var("Q"));
 
+		Statement spq = Stat(Arrays.asList(Expression.Type("P", "bool"), Var("P"), Expression.Type("Q", "bool"), Var("Q")),
+				Var("P"));
 		assertEquals(Collections.singleton(sp), w.getGrounding());
 		assertEquals(spq, w.getGrounded1());
 		assertEquals(Collections.singleton(spq), w.getGrounded());
