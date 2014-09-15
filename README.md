@@ -37,7 +37,7 @@ To-do list for functionality:
     * Abbreviation elimination is by a (non-kernel) proof which is created from
       a proof P (with grounding SS and grounded TT) which has abbreviations A
       and AA: the created proof has grounding statements SS; its grounded
-      statements are TT-after-expanding-all-of-AA; and it has only
+      statements are TT-after-expanding-A; and it has only
       abbreviations AA.
 
     * An abbreviation can also add hypotheses, so that it is possible to say,
@@ -50,7 +50,8 @@ To-do list for functionality:
    also be possible to construct T from SS _without_ using abbreviation A.
    
    The above idea makes sure that this property is checked by our proof
-   verification algorithm.
+   verification algorithm: the only part that will be built in is the
+   expansion of an abbreviation.
    
    Implementation idea for verification of abbreviations:
    
@@ -71,15 +72,26 @@ To-do list for functionality:
    statements about the positive reals.
 
    Open issue: Can these features be used to create a proof "the positive reals
-   form a group"?  I think they can, if we also have a 'hypothesis' proof step,
-   which grounds any statement whose conclusion is identical to one of it
-   hypotheses.
+   form a group"?  I think they can: it should be possible to create a proof
+   based on the real number theorems, with abbreviations
+   "(group-elem x) abbreviates (Real x) for which (> x 0)" and
+   "(op x y) abbreviates (* x y)", of a statement like
+   
+   > `(group-elem x) AND (group-elem y) ==> (group-elem (op x y))`
+   
+   which expands to the two (!) statements
+   
+   >  `(Real x) AND (> x 0) AND (Real y) AND (> y 0) ==> (Real (* x y))`
+   
+   and
  
+   >  `(Real x) AND (> x 0) AND (Real y) AND (> y 0) ==> (> (* x y) 0)`
+   
  - Perhaps implement export based on a proof's justifications
    (`getJustificationFor()`)?  Idea for a format:
     * Stack-based like Metamath's;
-    * For each of `getGrounded()`, first output (the used part of) the `Justification`s `Proof`
-      followed by the `ProofStep`;
+    * For each of `getGrounded()`, first output (the used part of) the `Justification`'s `Proof`
+      followed by its `ProofStep`;
     * Every part is output on a separate line, with a prefix HYP for the 'null' justifications,
       and prefixes COMPOSE, SUBSTITUTE, WEAKEN for the proof steps;
     * Compressed in BZip2 format (since the above has a _lot_ of duplication).
