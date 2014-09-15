@@ -262,4 +262,21 @@ public final class Expression {
 	public void addVarNamesTo(Set<String> result) {
 		internalExpression.addVarNamesTo(result);
 	}
+
+	/**
+	 * Is this a simple App expression, i.e., one that contains no nested App
+	 * expressions?
+	 * 
+	 * @return true or false
+	 */
+	public boolean isSimpleApp() {
+		App a = this.asApp();
+		if (a == null)
+			return false;
+		for (Expression sub : a.getSubexpressions()) {
+			if (sub.asVar() == null)
+				return false;
+		}
+		return true;
+	}
 }

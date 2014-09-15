@@ -203,6 +203,30 @@ public final class Statement {
 		return Stat(d, allHyps, conclusion);
 	}
 
+	/**
+	 * Expand this statement by applying the given abbreviation. Note that if
+	 * conditions are used, then this will usually result in <em>multiple</em>
+	 * statements, e.g., abbreviation "{@code (group-elem x)} abbreviates
+	 * {@code (Real x)} for which {@code (> x (0))}" would be expand
+	 * {@code (group-elem x) AND (group-elem y) ==> (group-elem (op x y))} to
+	 * <ul>
+	 * <li>
+	 * {@code (Real x) AND (> x (0)) AND (Real y) AND (> y (0)) ==> (Real (op x y))}
+	 * </li>
+	 * <li>
+	 * {@code (Real x) AND (> x (0)) AND (Real y) AND (> y (0)) ==> (> (op x y) (0))}
+	 * </li>
+	 * </ul>
+	 * 
+	 * @param abbreviation
+	 *            the abbreviation to expand
+	 * @return the set of statements resulting from the expansion
+	 */
+	public Set<Statement> expand(Abbreviation abbreviation) {
+		// TODO: Implement
+		return null;
+	}
+
 	private Set<String> getVarNames() {
 		Set<String> result = new HashSet<String>();
 		for (Expression h : hypotheses) {
