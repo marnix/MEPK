@@ -41,7 +41,7 @@ To-do list for functionality:
       abbreviations AA.
 
     * An abbreviation can also add hypotheses, so that it is possible to say,
-      "(group-elem x) abbreviates (Real x) for which (> x 0)".
+      "(group-elem x) abbreviates (Real x) for which (> x (0))".
     
    Rationale.  The key property for an abbreviation mechanism, and in general
    for _any_ definition mechanism, is that an abbreviation should not allow new
@@ -74,18 +74,18 @@ To-do list for functionality:
    Open issue: Can these features be used to create a proof "the positive reals
    form a group"?  I think they can: it should be possible to create a proof
    based on the real number theorems, with abbreviations
-   "(group-elem x) abbreviates (Real x) for which (> x 0)" and
+   "(group-elem x) abbreviates (Real x) for which (> x (0))" and
    "(op x y) abbreviates (* x y)", of a statement like
    
    > `(group-elem x) AND (group-elem y) ==> (group-elem (op x y))`
    
    which expands to the two (!) statements
    
-   >  `(Real x) AND (> x 0) AND (Real y) AND (> y 0) ==> (Real (* x y))`
+   >  `(Real x) AND (> x (0)) AND (Real y) AND (> y (0)) ==> (Real (* x y))`
    
    and
  
-   >  `(Real x) AND (> x 0) AND (Real y) AND (> y 0) ==> (> (* x y) 0)`
+   >  `(Real x) AND (> x (0)) AND (Real y) AND (> y (0)) ==> (> (* x y) (0))`
    
  - Perhaps implement export based on a proof's justifications
    (`getJustificationFor()`)?  Idea for a format:
