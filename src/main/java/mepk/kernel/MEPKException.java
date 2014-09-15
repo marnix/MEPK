@@ -1,6 +1,5 @@
 package mepk.kernel;
 
-
 /**
  * The common base class for all MEPK-related exceptions.
  */
