@@ -76,7 +76,13 @@ To-do list for functionality:
    hypotheses.
  
  - Perhaps implement export based on a proof's justifications
-   (`getJustificationFor()`)?
+   (`getJustificationFor()`)?  Idea for a format:
+    * Stack-based like Metamath's;
+    * For each of `getGrounded()`, first output (the used part of) the `Justification`s `Proof`
+      followed by the `ProofStep`;
+    * Every part is output on a separate line, with a prefix HYP for the 'null' justifications,
+      and prefixes COMPOSE, SUBSTITUTE, WEAKEN for the proof steps;
+    * Compressed in BZip2 format (since the above has a _lot_ of duplication).
 
 Implementation issues:
  
