@@ -219,4 +219,9 @@ public final class DVRSet {
 		// create a new set
 		return new DVRSet(newDVRMap);
 	}
+
+	@Override
+	public String toString() {
+		return "DVRSet [dvrMap=" + dvrMap + "]";
+	}
 }
