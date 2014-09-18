@@ -207,7 +207,7 @@ public final class Statement {
 	 * Expand this statement by applying the given abbreviation. Note that if
 	 * conditions are used, then this will usually result in <em>multiple</em>
 	 * statements, e.g., abbreviation "{@code (group-elem x)} abbreviates
-	 * {@code (Real x)} for which {@code (> x (0))}" would be expand
+	 * {@code (Real x)} for which {@code (> x (0))}" would expand
 	 * {@code (group-elem x) AND (group-elem y) ==> (group-elem (op x y))} to
 	 * <ul>
 	 * <li>

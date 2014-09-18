@@ -36,6 +36,14 @@ public class TestAbbreviations {
 
 	@Ignore("TODO: Complete the implementation to make this test case work")
 	@Test
+	public void test0() {
+		Abbreviation a = new Abbreviation(Expr("(group-elem x)"), Expr("(Real x)"));
+		List<Statement> expandedStats = Arrays.asList(Stat("(Real x) AND (Real y) ==> (Real (op x y))"));
+		assertEquals(new HashSet<>(expandedStats), originalStat.expand(a));
+	}
+
+	@Ignore("TODO: Complete the implementation to make this test case work")
+	@Test
 	public void test1() {
 		Abbreviation a = new Abbreviation(Expr("(op x y)"), Expr("(* x y)"));
 		Statement expandedStat = Stat("(group-elem x) AND (group-elem y) ==> (group-elem (* x y))");
@@ -46,8 +54,9 @@ public class TestAbbreviations {
 	@Test
 	public void test2() {
 		Abbreviation a = new Abbreviation(Expr("(group-elem x)"), Expr("(Real x)"), Expr("(> x (0))"));
-		List<Statement> expandedStats = Arrays.asList(Stat("(Real x) AND (> x (0)) AND (Real y) AND (> y (0)) ==> (Real (* x y))"),
-				Stat("(Real x) AND (> x (0)) AND (Real y) AND (> y (0)) ==> (> (* x y) (0))"));
+		List<Statement> expandedStats = Arrays.asList(
+				Stat("(Real x) AND (> x (0)) AND (Real y) AND (> y (0)) ==> (Real (op x y))"),
+				Stat("(Real x) AND (> x (0)) AND (Real y) AND (> y (0)) ==> (> (op x y) (0))"));
 		assertEquals(new HashSet<>(expandedStats), originalStat.expand(a));
 	}
 
