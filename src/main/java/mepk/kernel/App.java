@@ -26,7 +26,7 @@ public class App implements Expression.Internal {
 	 * 
 	 * @return the constant name of this expression
 	 */
-	public Object getConstName() {
+	public String getConstName() {
 		return constName;
 	}
 
@@ -115,5 +115,25 @@ public class App implements Expression.Internal {
 			es.add(e.getInternalExpression().substitute(varName, replacement, wrapper));
 		}
 		return wrapper.wrap(new App(constName, es.toArray(new Expression[es.size()])));
+	}
+
+	@Override
+	public Expression expand(Abbreviation abbreviation, List<Expression> accu, Wrapper wrapper) {
+		List<Expression> replacements = new ArrayList<>();
+		for (Expression e : this.getSubexpressions()) {
+			replacements.add(e.expand(abbreviation, accu));
+		}
+		List<String> normalVarNames = abbreviation.getNormalVarNames();
+		if (this.getConstName().equals(abbreviation.getConstName()) && normalVarNames.size() == replacements.size()) {
+			Expression thisExpanded = abbreviation.getExpansion();
+			for (int i = 0; i < replacements.size(); i++) {
+				String v = abbreviation.getNormalVarNames().get(i);
+				Expression replacement = replacements.get(i);
+				thisExpanded = thisExpanded.substitute(v, replacement);
+			}
+			return thisExpanded;
+		} else {
+			return wrapper.wrap(new App(constName, replacements.toArray(new Expression[replacements.size()])));
+		}
 	}
 }

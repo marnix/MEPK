@@ -1,5 +1,6 @@
 package mepk.kernel;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -77,6 +78,11 @@ public class Var implements Expression.Internal {
 	@Override
 	public Expression substitute(String varName, Expression.Internal replacement, Wrapper wrapper) {
 		return wrapper.wrap(this.varName.equals(varName) ? replacement : this);
+	}
+
+	@Override
+	public Expression expand(Abbreviation abbreviation, List<Expression> accu, Wrapper wrapper) {
+		return wrapper.wrap(this);
 	}
 
 	@Override

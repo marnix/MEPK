@@ -59,6 +59,20 @@ public final class Expression {
 		public Expression substitute(String varName, Expression.Internal replacement, Wrapper wrapper);
 
 		/**
+		 * Create a new (TODO: internal?) expression by expanding all instances
+		 * of the given abbreviation, and collect all conditions in accu.
+		 * 
+		 * @param abbreviation
+		 *            the abbreviation to expand
+		 * @param accu
+		 *            the accumulator for the (expanded) conditions
+		 * @param wrapper
+		 *            expression wrapper
+		 * @return the new expression
+		 */
+		public Expression expand(Abbreviation abbreviation, List<Expression> accu, Wrapper wrapper);
+
+		/**
 		 * Find all variable names in this expression, and add them to the given
 		 * set.
 		 * 
@@ -278,5 +292,20 @@ public final class Expression {
 				return false;
 		}
 		return true;
+	}
+
+	/**
+	 * Create a new expression by expanding all instances of the given
+	 * abbreviation, and collect all conditions in accu.
+	 * 
+	 * @param abbreviation
+	 *            the abbreviation to expand
+	 * @param accu
+	 *            the accumulator for the (expanded) conditions
+	 * 
+	 * @return the new expression
+	 */
+	public Expression expand(Abbreviation abbreviation, List<Expression> accu) {
+		return internalExpression.expand(abbreviation, accu, WRAPPER);
 	}
 }

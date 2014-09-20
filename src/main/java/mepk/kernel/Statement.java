@@ -5,6 +5,7 @@ import static mepk.kernel.Expression.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -223,8 +224,17 @@ public final class Statement {
 	 * @return the set of statements resulting from the expansion
 	 */
 	public Set<Statement> expand(Abbreviation abbreviation) {
-		// TODO: Implement
-		return null;
+		List<Expression> accuHyps = new ArrayList<>();
+		List<Expression> hyps = new ArrayList<>();
+		for (Expression thisHyp : this.getHypotheses()) {
+			Expression hyp = thisHyp.expand(abbreviation, accuHyps);
+			hyps.add(hyp);
+		}
+		assert accuHyps.isEmpty() : "TODO: Handle non-empty case";
+		List<Expression> accuConc = new ArrayList<>();
+		Expression conc = getConclusion().expand(abbreviation, accuConc);
+		assert accuConc.isEmpty() : "TODO: Handle non-empty case";
+		return Collections.singleton(Statement.Stat(this.getDVRs(), hyps, conc));
 	}
 
 	private Set<String> getVarNames() {

@@ -1,9 +1,18 @@
 package mepk.kernel;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
  * An abbreviation.
  */
 public final class Abbreviation {
+
+	private final Expression abbreviation;
+	private final Expression expansion;
+	private final Expression[] conditions;
 
 	/**
 	 * Create a new abbreviation.
@@ -23,6 +32,53 @@ public final class Abbreviation {
 		if (!abbreviation.isSimpleApp()) {
 			throw new MEPKException("error creating abbreviation: " + abbreviation + " cannot be used as abbreviation");
 		}
-		// TODO: check that the conditions don't add new variables
+
+		Set<String> varsAllowedInConditions = new HashSet<>();
+		varsAllowedInConditions.addAll(abbreviation.getVarNames());
+		varsAllowedInConditions.addAll(expansion.getVarNames());
+		for (Expression condition : conditions) {
+			Set<String> v = new HashSet<>(condition.getVarNames());
+			v.removeAll(varsAllowedInConditions);
+			if (!v.isEmpty()) {
+				throw new MEPKException("error creating abbreviation: condition " + condition + " uses unknown variables " + v);
+			}
+		}
+
+		this.abbreviation = abbreviation;
+		this.expansion = expansion;
+		this.conditions = conditions;
+	}
+
+	/**
+	 * Returns the name of this abbreviation.
+	 * 
+	 * @return the name
+	 */
+	public String getConstName() {
+		return abbreviation.asApp().getConstName();
+	}
+
+	/**
+	 * Returns the 'normal' variable names used in this abbreviation, so
+	 * excluding the 'floating' variable names that are only used in the
+	 * expansion (TODO: What terminology does Ghilbert use here?).
+	 * 
+	 * @return the names, in order
+	 */
+	public List<String> getNormalVarNames() {
+		List<String> result = new ArrayList<>();
+		for (Expression subExpression : abbreviation.asApp().getSubexpressions()) {
+			result.add(subExpression.asVar().getVarName());
+		}
+		return result;
+	}
+
+	/**
+	 * Returns the expansion of the abbreviation.
+	 * 
+	 * @return
+	 */
+	public Expression getExpansion() {
+		return expansion;
 	}
 }
