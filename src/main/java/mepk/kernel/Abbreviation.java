@@ -44,10 +44,15 @@ public final class Abbreviation {
 			}
 		}
 
+		// TODO: check that every 'floating' (expansion-only) variable has a
+		// condition to type it
+
 		this.abbreviation = abbreviation;
 		this.expansion = expansion;
 		this.conditions = conditions;
 	}
+
+	// TODO: Add equals, hashCode, toString for Abbreviation
 
 	/**
 	 * Returns the name of this abbreviation.

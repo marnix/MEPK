@@ -59,6 +59,15 @@ public class TestAbbreviations {
 
 	@Ignore("TODO: Complete the implementation to make this test case work")
 	@Test
+	public void testFree() {
+		Abbreviation a = new Abbreviation(Expr("(true)"), Expr("(= x x)"), Expr("(elem x)"));
+		Statement origStat = Stat("(wff P) AND P ==> (true)");
+		Statement expandedStat = Stat("(wff P) AND P AND (elem _0) ==> (= _0 _0)");
+		assertEquals(Collections.singleton(expandedStat), origStat.expand(a));
+	}
+
+	@Ignore("TODO: Complete the implementation to make this test case work")
+	@Test
 	public void test2() {
 		Abbreviation a = new Abbreviation(Expr("(group-elem x)"), Expr("(Real x)"), Expr("(> x (0))"));
 		List<Statement> expandedStats = Arrays.asList(

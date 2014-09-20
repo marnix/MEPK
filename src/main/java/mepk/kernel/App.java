@@ -2,6 +2,7 @@ package mepk.kernel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -118,7 +119,7 @@ public class App implements Expression.Internal {
 	}
 
 	@Override
-	public Expression expand(Abbreviation abbreviation, List<Expression> accu, Wrapper wrapper) {
+	public Expression expand(Abbreviation abbreviation, Collection<Expression> accu, Wrapper wrapper) {
 		List<Expression> replacements = new ArrayList<>();
 		for (Expression e : this.getSubexpressions()) {
 			replacements.add(e.expand(abbreviation, accu));

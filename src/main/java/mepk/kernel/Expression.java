@@ -1,6 +1,7 @@
 package mepk.kernel;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -70,7 +71,7 @@ public final class Expression {
 		 *            expression wrapper
 		 * @return the new expression
 		 */
-		public Expression expand(Abbreviation abbreviation, List<Expression> accu, Wrapper wrapper);
+		public Expression expand(Abbreviation abbreviation, Collection<Expression> accu, Wrapper wrapper);
 
 		/**
 		 * Find all variable names in this expression, and add them to the given
@@ -305,7 +306,7 @@ public final class Expression {
 	 * 
 	 * @return the new expression
 	 */
-	public Expression expand(Abbreviation abbreviation, List<Expression> accu) {
+	public Expression expand(Abbreviation abbreviation, Collection<Expression> accu) {
 		return internalExpression.expand(abbreviation, accu, WRAPPER);
 	}
 }
