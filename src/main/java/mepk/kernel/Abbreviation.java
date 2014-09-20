@@ -81,7 +81,7 @@ public final class Abbreviation {
 	/**
 	 * Returns the expansion of the abbreviation.
 	 * 
-	 * @return
+	 * @return the expansion
 	 */
 	public Expression getExpansion() {
 		return expansion;
