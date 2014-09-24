@@ -108,6 +108,11 @@ public final class TrustedProof extends Proof {
 
 	private TrustedProof(TrustedProof.Internal internalTrustedProof) {
 		this.internalTrustedProof = internalTrustedProof;
+		try {
+			assert false : "only perform the verification below if assertions are on";
+		} catch (AssertionError ex) {
+			verify();
+		}
 	}
 
 	@Override

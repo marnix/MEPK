@@ -67,7 +67,7 @@ public final class DVRSet {
 
 		// check the internal consistency of the provided dvrMap
 		try {
-			assert false; // only perform the loops below if assertions are on
+			assert false : "only perform the loops below if assertions are on";
 		} catch (AssertionError ex) {
 			for (Entry<String, Set<String>> kv : dvrMap.entrySet()) {
 				String var = kv.getKey();
