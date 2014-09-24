@@ -6,6 +6,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import mepk.builtin.internal.StatementAbbrExpState;
+
 /**
  * A constant-application expression. Instances are obtained through
  * {@link Expression#asApp()}, for expressions which have been created through

@@ -12,6 +12,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import mepk.builtin.internal.StatementAbbrExpState;
+
 /**
  * This class represents an statement. Statements are values: they cannot be
  * modified after they have been created. They are {@link #equals(Object) equal}
