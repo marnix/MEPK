@@ -1,6 +1,5 @@
 package mepk.kernel;
 
-import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -81,7 +80,7 @@ public class Var implements Expression.Internal {
 	}
 
 	@Override
-	public Expression expand(Abbreviation abbreviation, Collection<Expression> accu, Wrapper wrapper) {
+	public Expression expand(Abbreviation abbreviation, StatementAbbrExpState accu, Wrapper wrapper) {
 		return wrapper.wrap(this);
 	}
 

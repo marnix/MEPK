@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-public class TestAbbreviations {
+public class TestAbbreviationExpansion {
 
 	private Statement originalStat;
 
@@ -44,14 +44,14 @@ public class TestAbbreviations {
 	}
 
 	@Test
-	public void test0() {
+	public void testSimpleTopLevelExpansion() {
 		Abbreviation a = new Abbreviation(Expr("(group-elem x)"), Expr("(Real x)"));
 		Statement expandedStat = Stat("(Real x) AND (Real y) ==> (Real (op x y))");
 		assertEquals(Collections.singleton(expandedStat), originalStat.expand(a));
 	}
 
 	@Test
-	public void test1() {
+	public void testSimpleNestedExpansion() {
 		Abbreviation a = new Abbreviation(Expr("(op x y)"), Expr("(+ y x)"));
 		Statement expandedStat = Stat("(group-elem x) AND (group-elem y) ==> (group-elem (+ y x))");
 		assertEquals(Collections.singleton(expandedStat), originalStat.expand(a));
@@ -59,16 +59,19 @@ public class TestAbbreviations {
 
 	@Ignore("TODO: Complete the implementation to make this test case work")
 	@Test
-	public void testFree() {
+	public void testFloatingVariableExpansion() {
 		Abbreviation a = new Abbreviation(Expr("(true)"), Expr("(= x x)"), Expr("(elem x)"));
 		Statement origStat = Stat("(wff P) AND P ==> (true)");
 		Statement expandedStat = Stat("(wff P) AND P AND (elem _0) ==> (= _0 _0)");
 		assertEquals(Collections.singleton(expandedStat), origStat.expand(a));
 	}
 
+	// TODO: Test case for multiple expansions of same abbreviation, which has
+	// floating variable
+
 	@Ignore("TODO: Complete the implementation to make this test case work")
 	@Test
-	public void test2() {
+	public void testExpansionWithConditionInConclusion() {
 		Abbreviation a = new Abbreviation(Expr("(group-elem x)"), Expr("(Real x)"), Expr("(> x (0))"));
 		List<Statement> expandedStats = Arrays.asList(
 				Stat("(Real x) AND (> x (0)) AND (Real y) AND (> y (0)) ==> (Real (op x y))"),

@@ -224,16 +224,14 @@ public final class Statement {
 	 * @return the set of statements resulting from the expansion
 	 */
 	public Set<Statement> expand(Abbreviation abbreviation) {
-		List<Expression> accuHyps = new ArrayList<>();
+		StatementAbbrExpState aes = new StatementAbbrExpState();
 		List<Expression> hyps = new ArrayList<>();
 		for (Expression thisHyp : this.getHypotheses()) {
-			Expression hyp = thisHyp.expand(abbreviation, accuHyps);
+			Expression hyp = thisHyp.expand(abbreviation, aes);
 			hyps.add(hyp);
 		}
-		assert accuHyps.isEmpty() : "TODO: Handle non-empty case";
-		List<Expression> accuConc = new ArrayList<>();
-		Expression conc = getConclusion().expand(abbreviation, accuConc);
-		assert accuConc.isEmpty() : "TODO: Handle non-empty case";
+		Expression conc = getConclusion().expand(abbreviation, aes);
+		// TODO: use aes in building the resulting set of statements
 		return Collections.singleton(Statement.Stat(this.getDVRs(), hyps, conc));
 	}
 
