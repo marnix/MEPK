@@ -1,4 +1,5 @@
 /.recommenders
 /.settings/com.chronon.sb.browser.launcher.prefs
+/.settings/edu.umd.cs.findbugs.core.prefs
 /_darcs
 /target
