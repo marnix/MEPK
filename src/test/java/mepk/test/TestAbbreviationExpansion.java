@@ -66,8 +66,14 @@ public class TestAbbreviationExpansion {
 		assertEquals(Collections.singleton(expandedStat), origStat.expand(a));
 	}
 
-	// TODO: Test case for multiple expansions of same abbreviation, which has
-	// floating variable
+	@Ignore("TODO: Complete the implementation to make this test case work")
+	@Test
+	public void testMultipleSameFloatingVariableExpansion() {
+		Abbreviation a = new Abbreviation(Expr("(true)"), Expr("(= x x)"), Expr("(elem x)"));
+		Statement origStat = Stat("(true) ==> (true)");
+		Statement expandedStat = Stat("(elem _0) AND (= _0 _0) ==> (= _0 _0)");
+		assertEquals(Collections.singleton(expandedStat), origStat.expand(a));
+	}
 
 	@Ignore("TODO: Complete the implementation to make this test case work")
 	@Test
