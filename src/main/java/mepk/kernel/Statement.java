@@ -5,7 +5,6 @@ import static mepk.kernel.Expression.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -233,8 +232,10 @@ public final class Statement {
 			hyps.add(hyp);
 		}
 		Expression conc = getConclusion().expand(abbreviation, aes);
-		// TODO: use aes in building the resulting set of statements
-		return Collections.singleton(Statement.Stat(this.getDVRs(), hyps, conc));
+		Set<Statement> result = new HashSet<>();
+		result.add(Statement.Stat(this.getDVRs(), hyps, conc));
+		// TODO: use aes to add more statements
+		return result;
 	}
 
 	private Set<String> getVarNames() {
