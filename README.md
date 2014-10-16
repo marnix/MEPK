@@ -23,8 +23,17 @@ To-do list for functionality:
     * We do _not_ introduce a new 'abbreviation' proof step.
  
     * Every proof has a set of abbreviations AA, so that a proof means, "From
-      grounding statements SS one can construct statements TT-after-expanding-
+      grounding statements SS-after-expanding-
+      all-of-AA one can construct statements TT-after-expanding-
       all-of-AA, using only proof steps."
+      
+      _Rationale._ We also expand AA in the grounding statements SS, since I've
+      seen a case which I very much would like to work, for which I see no
+      other solution.  (TODO: Add succinct description of such a use case.) I
+      don't see any downside to this expansion of SS.  The alternatives are to
+      forbid AA in SS, or not expand AA in SS, so that there would be no valid
+      proof using an abbreviation A where SS uses A.  But that does not seem to
+      solve any problem.
     
     * When verifying that a proof really proves statement T, it shows how to
       construct T-after-expanding-all-of-AA.
