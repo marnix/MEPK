@@ -74,10 +74,10 @@ The proof
 
 To be able to do this proof, the following abbreviations will be used:
 
-   (Int i)   =>=  (Pair i) AND (=P i (n m))   WITH   (Nat n) AND (Nat m)
-   (=I i j)  =>=  (=N (+N (fst i) (snd j)) (+N (snd i) (fst j)))
-   (+I i j)  =>=  (pair (+N (fst i) (fst j)) (+N (snd i) (snd j)))
-   (0I)      =>=  (pair n n)   WITH   (Nat n)
+    (Int i)   =>=  (Pair i) AND (=P i (n m))   WITH   (Nat n) AND (Nat m)
+    (=I i j)  =>=  (=N (+N (fst i) (snd j)) (+N (snd i) (fst j)))
+    (+I i j)  =>=  (pair (+N (fst i) (fst j)) (+N (snd i) (snd j)))
+    (0I)      =>=  (pair n n)   WITH   (Nat n)
 
 With these,
 
