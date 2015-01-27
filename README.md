@@ -19,6 +19,11 @@ To-do list for functionality:
 
  - Design and implement abbreviations.  My current best design idea is the
    following.
+
+   (TODO: Try and generalize or replace the idea below by using the concept of
+   'profiles'.  See my ["Using 'profiles' for conservative extension /
+   definition mechanism"](https://groups.google.com/forum/#!topic/metamath/lcl-OvLyVR0)
+   mail to the Metamath mailing list.)
  
     * We do _not_ introduce a new 'abbreviation' proof step.
  
