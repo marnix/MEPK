@@ -1,3 +1,2 @@
 language: java
 sudo: false
-script: mvn -f mm.ecxt.parent/pom.xml install
