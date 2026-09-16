@@ -254,14 +254,11 @@ severity):
    (5 classes), so the migration is low-risk. Consider OpenRewrite's JUnit4->5
    recipe to automate it.
 
- - **Verify/further optimize CI build time.** The `mvn clean verify site` step
-   was ~30 s (of a ~40 s job), dominated by dependency/plugin *download*, not
-   compilation. A Maven cache-seed step (`dependency:go-offline
-   dependency:resolve-plugins`) is now in `.github/workflows/ci.yml` so the
-   cache-creating run downloads everything (setup-java's `cache: maven` does
-   not re-save on a cache hit, and Maven resolves plugins lazily — see the
-   step's comment). To do: confirm on a later run *with an unchanged pom.xml*
-   that `~/.m2` is restored and the step drops to a few seconds; if still slow,
-   consider trimming plugins pulled in by `site` (e.g. project-info reports)
-   when only Javadoc is needed.
+ - **(Optional) Further trim CI build time.** Caching now works: a warm run
+   (unchanged `pom.xml`, so the `~/.m2` cache is restored) does the seed in ~3 s
+   and the build in ~11 s, down from ~30 s cold — the Maven cache-seed step in
+   `.github/workflows/ci.yml` ensures the saved cache is complete (see that
+   step's comment for why). Only remaining idea, if a run is ever still slow:
+   trim plugins pulled in by `site` (e.g. project-info reports) when only
+   Javadoc is needed.
 
