@@ -115,3 +115,83 @@ Implementation issues:
  - Change method names so that every Set<Statement> is called a 'theory', e.g.,
    getGrounding() -> getGroundingTheory()?  Con: The current names are short,
    and that is good.  For now I'll keep the current behavior.
+
+ - `TrustedProof` name/function mismatch.  The class is named "Trusted" but is
+   actually the *untrusted* composition layer built on top of `mepk.kernel`
+   (it adds no primitive inference; its outputs are re-checkable by the
+   kernel's `verify()`).  It lives in `mepk.builtin` on purpose (see commit
+   5a9a110 "kernel split off": once `ProofStep` became a `Proof`,
+   `TrustedProof` was pure composition).  Two fixes:
+    * Rename it to a DSL-ish name (e.g. `Proofs` or `ProofBuilder`) so the
+      name reflects "convenience constructor", not "trust boundary".
+    * Move the trust-establishing `verify()` call OUT of its constructor
+      (added in commit a1a8ff5, and only under `-ea`; see soundness list
+      below).  A non-kernel class should not be the thing that (conditionally)
+      decides trust.
+
+Kernel correctness / soundness to-do (found in a 2026 audit; do the soundness
+items BEFORE any hashing/signing/serialization work — they are ordered by
+severity):
+
+ - **S1 (critical): `internal/Substitute` performs NO disjoint-variable (DVR)
+   check.**  Its body is `// TODO: Check arguments` then
+   `statement.substitute(...)`, which only *propagates* the DVR set, never
+   *validates* legality.  Since `Compose` does no unification, all substitution
+   soundness rests on this rule -- so the kernel is currently unsound: a
+   substitution can collapse a required distinctness (classic
+   forall-x-exists-y (x!=y)  =>  exists-y (y!=y)).  Fix: in `Substitute`, for
+   every DVR (a,b) of the statement, require the images of a and b to have
+   disjoint variable sets after substitution; reject with
+   `MEPKVerificationException` otherwise.  Add a test that a DVR-violating
+   substitution throws *with assertions OFF*.
+
+ - **S2: `DVRSet.substitute` silently DROPS distinctness for variable-free
+   replacements** instead of validating it.  Make it validate rather than drop.
+
+ - **S3: the `DVRSet` symmetry/consistency invariant is only enforced under
+   `-ea`** (inside the `try{assert false;}catch(AssertionError){...}` trick), so
+   with assertions off a malformed asymmetric `DVRSet` can be built.  A
+   soundness *invariant* must ALWAYS hold: move the check out of the assertion
+   trick, or make asymmetry unrepresentable (always insert both directions).
+
+ - **S4: `andDistinct(DVRSet)` trusts (unenforced) symmetry of its input**,
+   while `andDistinct(String...)` symmetrizes.  Make the merge symmetrize too.
+
+ - **`verify()` is only CALLED under `-ea`.**  `TrustedProof`'s constructor
+   gates the `verify()` call behind the assertion trick, so by default (JVM
+   assertions off) proofs are constructed and never verified.  Either make
+   verification unconditional, or -- better -- fix the constructors (S1) so
+   "correct by construction" truly holds and keep `verify()` as a redundant,
+   *independent* cross-check that always runs in CI.  NB: `verify()` currently
+   only checks the *wiring* between steps and trusts each `ProofStep`'s
+   `getGrounded1()`, so it cannot catch S1 by itself -- the DVR check must live
+   in the rule constructor regardless.
+
+ - **`ExpandedAbbreviationsProof` is a no-op stub** (`getGrounded()` /
+   `getJustificationFor()` have `// TODO: ...with all abbreviations expanded`),
+   yet it runs *inside* the TCB as `verify()`'s abbreviation-expansion step.
+   Until it truly expands, abbreviations are not soundly handled (the
+   `getAbbreviations().isEmpty()` guard papers over this).  Soundness-relevant
+   because abbreviation conservativity is a TCB concern.
+
+ - **`Justification` breaks the kernel's immutability discipline**: its
+   `proofStep`/`proof` fields are non-`final` (unlike `Statement`/`Expression`/
+   `DVRSet`), and its prerequisite check is an `assert`.  Make fields `final`;
+   promote the check.
+
+ - **`Var` and `App` are not `final`** (unlike the other kernel value types),
+   and **`App`'s constructor stores the `Expression[]` without a defensive
+   copy** -- a minor immutability leak inside the TCB.  Make them `final` and
+   copy the array on construction.
+
+ - **`verify()` is recursive** with an acknowledged JVM-stack-depth risk on
+   deep proofs; convert to an explicit iterative worklist before running large
+   corpora (e.g. `set.mm`).
+
+ - **Assurance (not a bug, but needed to trust the above):** add a second,
+   *independent* verifier as a differential cross-check on `set.mm`
+   (candidate: the author's `marnix/zigmmverify`, or `checkmm`); fuzz the
+   parser (which is outside the TCB, so parser bugs yield wrong/malformed
+   statements, never false theorems); modernize the toolchain (the BuildHive/
+   CloudBees CI is defunct).
+
