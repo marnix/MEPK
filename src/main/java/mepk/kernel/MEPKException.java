@@ -15,6 +15,12 @@ public class MEPKException extends RuntimeException {
 		super(message);
 	}
 
+	/**
+	 * Create a new instance.
+	 * 
+	 * @param cause
+	 *            the exception cause
+	 */
 	public MEPKException(Throwable cause) {
 		super(cause);
 	}

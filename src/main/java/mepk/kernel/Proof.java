@@ -87,6 +87,20 @@ public abstract class Proof {
 		new ExpandedAbbreviationsProof(this).verifyStatementsAreJustified(this.getGrounded());
 	}
 
+	/**
+	 * Recursively check that each of the given statements is justified: it must
+	 * either be one of this proof's {@link #getGrounding() grounding}
+	 * statements, or have a {@link Justification} whose {@link ProofStep} yields
+	 * it and whose {@link Justification#getProof() proof} justifies that step's
+	 * prerequisites (which are checked recursively). This proof must not have
+	 * any {@link #getAbbreviations() abbreviations} left to expand.
+	 * 
+	 * @param grounded
+	 *            the statements to check; must be a subset of
+	 *            {@link #getGrounded()}
+	 * @throws MEPKVerificationException
+	 *             if any statement is not justified
+	 */
 	protected final void verifyStatementsAreJustified(Set<Statement> grounded) throws MEPKVerificationException {
 		if (!this.getAbbreviations().isEmpty()) {
 			throw new MEPKException("illegal use of verification algorithm: did not expect abbreviations "

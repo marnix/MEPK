@@ -83,14 +83,29 @@ public final class Statement {
 		}
 	}
 
+	/**
+	 * Returns the distinct-variable restrictions (DVRs) of this statement.
+	 * 
+	 * @return the DVRs
+	 */
 	public DVRSet getDVRs() {
 		return dvrs;
 	}
 
+	/**
+	 * Returns the hypotheses of this statement.
+	 * 
+	 * @return the hypotheses
+	 */
 	public Collection<? extends Expression> getHypotheses() {
 		return hypotheses;
 	}
 
+	/**
+	 * Returns the conclusion of this statement.
+	 * 
+	 * @return the conclusion
+	 */
 	public Expression getConclusion() {
 		return conclusion;
 	}

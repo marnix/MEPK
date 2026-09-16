@@ -254,15 +254,6 @@ severity):
    (5 classes), so the migration is low-risk. Consider OpenRewrite's JUnit4->5
    recipe to automate it.
 
- - **Fill in missing public-API Javadoc.** The `mvn site` Javadoc build emits
-   8 "no comment" warnings for undocumented public members (main code, not
-   tests). Since the published docs are for users of the library, these should
-   be documented. Locations: `Expression.java:222`, `Statement.java:86/90/94`,
-   `Proof.java:90`, `MEPKException.java:18`,
-   `mepk/kernel/util/ExpandedAbbreviationsProof.java:21`,
-   `mepk/kernel/util/TrivialProof.java:19`. (Small, safe; also clears the
-   Javadoc warnings.)
-
  - **Verify/further optimize CI build time.** The `mvn clean verify site` step
    was ~30 s (of a ~40 s job), dominated by dependency/plugin *download*, not
    compilation. A Maven cache-seed step (`dependency:go-offline

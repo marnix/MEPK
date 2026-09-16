@@ -16,6 +16,13 @@ public final class TrivialProof extends Proof {
 
 	private final Set<Statement> statements;
 
+	/**
+	 * Create a new instance.
+	 * 
+	 * @param statements
+	 *            the statements grounding, and trivially grounded by, this
+	 *            proof
+	 */
 	public TrivialProof(Set<Statement> statements) {
 		this.statements = statements;
 	}

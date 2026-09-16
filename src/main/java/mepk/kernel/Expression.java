@@ -219,6 +219,11 @@ public final class Expression {
 		return internalExpression.toString();
 	}
 
+	/**
+	 * Returns the {@link Internal internal representation} of this expression.
+	 * 
+	 * @return the internal expression
+	 */
 	public Expression.Internal getInternalExpression() {
 		return internalExpression;
 	}

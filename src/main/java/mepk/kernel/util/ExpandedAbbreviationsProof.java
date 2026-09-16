@@ -18,6 +18,12 @@ public class ExpandedAbbreviationsProof extends Proof {
 
 	private final Proof proof;
 
+	/**
+	 * Create a new instance wrapping the given proof.
+	 * 
+	 * @param proof
+	 *            the proof whose abbreviations are to be expanded
+	 */
 	public ExpandedAbbreviationsProof(Proof proof) {
 		this.proof = proof;
 	}
