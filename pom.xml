@@ -27,12 +27,8 @@
 		     (https://maven.apache.org/guides/mini/guide-reproducible-builds.html). -->
 		<project.build.outputTimestamp>2026-09-16T00:00:00Z</project.build.outputTimestamp>
 
-		<!-- Pinned dependency/plugin versions (declared once, used below).
-		     NB: jparsec is intentionally kept at 2.1 — 3.x renamed the package
-		     (org.codehaus.jparsec -> org.jparsec) and changed the API, which
-		     would require source changes in MEPKParsers. Upgrading jparsec is a
-		     separate task, not part of build modernization. -->
-		<jparsec.version>2.1</jparsec.version>
+		<!-- Pinned dependency/plugin versions (declared once, used below). -->
+		<jparsec.version>3.1</jparsec.version>
 		<junit.version>4.13.2</junit.version>
 		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
 		<maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>

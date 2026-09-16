@@ -9,17 +9,17 @@ import mepk.kernel.DVRSet;
 import mepk.kernel.Expression;
 import mepk.kernel.Statement;
 
-import org.codehaus.jparsec.Parser;
-import org.codehaus.jparsec.Parsers;
-import org.codehaus.jparsec.Scanners;
-import org.codehaus.jparsec.Terminals;
-import org.codehaus.jparsec.Token;
-import org.codehaus.jparsec.TokenMap;
-import org.codehaus.jparsec.Tokens;
-import org.codehaus.jparsec.Tokens.Fragment;
-import org.codehaus.jparsec.error.ParserException;
-import org.codehaus.jparsec.functors.Map;
-import org.codehaus.jparsec.functors.Pair;
+import org.jparsec.Parser;
+import org.jparsec.Parsers;
+import org.jparsec.Scanners;
+import org.jparsec.Terminals;
+import org.jparsec.Token;
+import org.jparsec.TokenMap;
+import org.jparsec.Tokens;
+import org.jparsec.Tokens.Fragment;
+import org.jparsec.error.ParserException;
+import org.jparsec.functors.Map;
+import org.jparsec.functors.Pair;
 
 /**
  * Parsers for expressions, etc.
