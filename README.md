@@ -240,3 +240,21 @@ severity):
    for javadoc.io): tag releases and drop the `-SNAPSHOT` for a released
    version.
 
+ - **Investigate/optimize CI build time.** In the first CI run the
+   `mvn clean verify site` step took ~28 s (of a ~40 s job); everything else
+   (checkout, JDK from tool-cache, upload) was a few seconds. That step ran on
+   a *cold* `~/.m2` — the setup-java log said "maven cache is not found" and
+   the post step saved a ~38 MB cache — so the time was dependency/plugin
+   download, not compilation (compile+test+javadoc is only a few seconds).
+   Note on caching: `actions/setup-java`'s `cache: maven` keys the cache on a
+   hash of the `pom.xml` files, so a POM change won't get an *exact-key* hit;
+   but it falls back to a restore-key (most recent prior cache), so a POM edit
+   normally restores the old cache and downloads only the *new* artifacts
+   rather than everything. The ~38 MB here was the one-time first-run cold
+   start (no prior cache to restore) compounded by newly-added site/javadoc
+   plugins. Expected: subsequent unchanged-POM runs get an exact hit and are
+   fast. To optimize further, consider: verifying later runs actually hit the
+   cache; a looser/stable cache key so POM edits don't change it; or trimming
+   plugins pulled in by `site` (e.g. project-info reports) if only Javadoc is
+   wanted.
+
