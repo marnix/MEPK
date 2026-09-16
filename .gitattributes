@@ -1,0 +1,31 @@
+# Line-ending policy for this repository.
+#
+# Declaring this here (rather than relying on each contributor's
+# core.autocrlf) makes checkout/commit behaviour identical on Linux, macOS,
+# and native-Windows Git. Text files are stored as LF in the repository (the
+# canonical form); the rules below also force LF in the working tree for
+# source/build files so all tooling sees the same bytes everywhere.
+
+# Fallback: let Git detect text vs binary and normalise text to LF in the repo.
+* text=auto
+
+# Source and build/config files: LF everywhere (repo AND working tree).
+*.java        text eol=lf
+*.xml         text eol=lf
+*.yml         text eol=lf
+*.yaml        text eol=lf
+*.md          text eol=lf
+*.mm          text eol=lf
+*.properties  text eol=lf
+*.txt         text eol=lf
+*.classpath   text eol=lf
+*.project     text eol=lf
+*.launch      text eol=lf
+
+# Windows-only scripts must stay CRLF.
+*.bat         text eol=crlf
+*.cmd         text eol=crlf
+
+# Binaries: never convert.
+*.jar         binary
+*.class       binary
