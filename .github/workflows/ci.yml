@@ -59,6 +59,14 @@ jobs:
           cache: maven
       - name: Show toolchain versions
         run: mvn -version
+      # Seed ~/.m2 with ALL project + plugin dependencies before building.
+      # setup-java's cache: maven does not re-save on a cache hit, and Maven
+      # resolves plugins lazily, so whatever the cache-creating run does not
+      # download here would otherwise be re-fetched on every later run. This
+      # makes the first (cache-creating) run comprehensive. See setup-java
+      # docs/advanced-usage.md "Ensuring the Maven cache is complete".
+      - name: Seed the Maven cache
+        run: mvn -B dependency:go-offline dependency:resolve-plugins
       # `verify` builds and tests; `site` generates the Javadoc HTML (via the
       # maven-javadoc-plugin <reporting> config in pom.xml) into
       # target/site/apidocs. A Javadoc error therefore fails this build job.
