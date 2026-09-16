@@ -152,6 +152,11 @@ Implementation issues:
    getGrounding() -> getGroundingTheory()?  Con: The current names are short,
    and that is good.  For now I'll keep the current behavior.
 
+ - Group / rename the test files.  Names like `Test1` are uninformative and the
+   tests are split by incidental history rather than by what they cover.
+   Reorganize by kernel component / concern (e.g. substitution, compose,
+   weaken, DVRs, parser, abbreviations) with descriptive class names.
+
  - `TrustedProof` name/function mismatch.  The class is named "Trusted" but is
    actually the *untrusted* composition layer built on top of `mepk.kernel`
    (it adds no primitive inference; its outputs are re-checkable by the
