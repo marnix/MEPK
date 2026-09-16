@@ -169,21 +169,6 @@ Kernel correctness / soundness to-do (found in a 2026 audit; do the soundness
 items BEFORE any hashing/signing/serialization work — they are ordered by
 severity):
 
- - **S1 (critical): `internal/Substitute` performs NO disjoint-variable (DVR)
-   check.**  Its body is `// TODO: Check arguments` then
-   `statement.substitute(...)`, which only *propagates* the DVR set, never
-   *validates* legality.  Since `Compose` does no unification, all substitution
-   soundness rests on this rule -- so the kernel is currently unsound: a
-   substitution can collapse a required distinctness (classic
-   forall-x-exists-y (x!=y)  =>  exists-y (y!=y)).  Fix: in `Substitute`, for
-   every DVR (a,b) of the statement, require the images of a and b to have
-   disjoint variable sets after substitution; reject with
-   `MEPKVerificationException` otherwise.  Add a test that a DVR-violating
-   substitution throws *with assertions OFF*.
-
- - **S2: `DVRSet.substitute` silently DROPS distinctness for variable-free
-   replacements** instead of validating it.  Make it validate rather than drop.
-
  - **S3: the `DVRSet` symmetry/consistency invariant is only enforced under
    `-ea`** (inside the `try{assert false;}catch(AssertionError){...}` trick), so
    with assertions off a malformed asymmetric `DVRSet` can be built.  A
@@ -196,12 +181,12 @@ severity):
  - **`verify()` is only CALLED under `-ea`.**  `TrustedProof`'s constructor
    gates the `verify()` call behind the assertion trick, so by default (JVM
    assertions off) proofs are constructed and never verified.  Either make
-   verification unconditional, or -- better -- fix the constructors (S1) so
-   "correct by construction" truly holds and keep `verify()` as a redundant,
-   *independent* cross-check that always runs in CI.  NB: `verify()` currently
-   only checks the *wiring* between steps and trusts each `ProofStep`'s
-   `getGrounded1()`, so it cannot catch S1 by itself -- the DVR check must live
-   in the rule constructor regardless.
+   verification unconditional, or -- better -- keep the rule constructors as the
+   soundness mechanism (they already enforce substitution/DVR legality) and let
+   `verify()` be a redundant, *independent* cross-check that always runs in CI.
+   NB: `verify()` currently only checks the *wiring* between steps and trusts
+   each `ProofStep`'s `getGrounded1()`, so the per-step legality checks must
+   remain in the rule constructors regardless.
 
  - **`ExpandedAbbreviationsProof` is a no-op stub** (`getGrounded()` /
    `getJustificationFor()` have `// TODO: ...with all abbreviations expanded`),

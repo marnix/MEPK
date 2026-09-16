@@ -121,6 +121,44 @@ public class Test1 {
 	}
 
 	@Test
+	public void testSubstituteViolatingDistinctVariablesFails() throws Throwable {
+		// DISTINCT (x y) requires the substitutes for x and y to have no variable
+		// in common; substituting an expression containing y for x violates this.
+		Statement s = Stat("DISTINCT (x y) AND (Real x) AND (Real y) ==> (Real (+ x y))");
+		try {
+			ProofStep.Substitute(s, "x", Expr("(+ y y)"), Types.EmptyMap());
+			fail();
+		} catch (MEPKException e) {
+			assertTrueElseException(e.getMessage().contains("may not be disjoint with itself"), e);
+		}
+	}
+
+	@Test
+	public void testSubstituteVariableFreeDropsDistinctVariables() throws Throwable {
+		// Substituting a variable-free expression for x makes DISTINCT (x y)
+		// vacuous (no variables in common), so the restriction is dropped.
+		Statement s = Stat("DISTINCT (x y) AND (Real x) AND (Real y) ==> (Real (+ x y))");
+		Statement t = s.substitute("x", Expr("(zero)"), Types.EmptyMap());
+		assertEquals(Stat("(Real (zero)) AND (Real y) ==> (Real (+ (zero) y))"), t);
+	}
+
+	@Test
+	public void testSubstituteMakingImagesShareVariableFails() throws Throwable {
+		// Under DISTINCT (x y), substitute x := (f z) (so the restriction becomes
+		// DISTINCT (y z)), then y := (g z); the images of x and y would then share
+		// z, so the second substitution must be rejected.
+		Statement s = Stat("DISTINCT (x y) AND (bool x) AND (bool y) ==> (P x y)");
+		Statement s1 = s.substitute("x", Expr("(f z)"), Types.map("z", "bool"));
+		assertEquals(DVRSet.Distinct("y", "z"), s1.getDVRs());
+		try {
+			s1.substitute("y", Expr("(g z)"), Types.EmptyMap());
+			fail();
+		} catch (MEPKException e) {
+			assertTrueElseException(e.getMessage().contains("may not be disjoint with itself"), e);
+		}
+	}
+
+	@Test
 	public void testWeakenNoChange() throws Throwable {
 		Statement sp = Stat("(Real x) AND (Nat x) ==> (= x x)");
 		Statement sq = Stat("(Nat x) AND (Real x) ==> (= x x)");
