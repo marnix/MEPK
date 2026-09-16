@@ -1,3 +1,6 @@
+[![CI](https://github.com/marnix/MEPK/actions/workflows/ci.yml/badge.svg)](https://github.com/marnix/MEPK/actions/workflows/ci.yml)
+[![Javadoc](https://img.shields.io/badge/Javadoc-online-blue)](https://marnix.github.io/MEPK/)
+
 MEPK: a Minimal Extensible Proof Kernel
 =======================================
 
@@ -36,6 +39,14 @@ Requirements:
 API documentation can be generated locally with:
 
     mvn javadoc:javadoc
+
+Continuous integration runs on GitHub Actions (`.github/workflows/ci.yml`):
+every pushed commit and pull request is built and tested on JDK 17 using the
+runner image's bundled Maven (documented as Maven 3.9.16 / JDK 17.0.20 in the
+current `ubuntu-24.04` image); each run logs the exact versions via
+`mvn -version`.  The Javadoc for the latest commit on the default branch is
+published to GitHub Pages at <https://marnix.github.io/MEPK/>.  (Build outputs
+are not distributed; see the "distribute binaries?" to-do below.)
 
 
 To-do list for functionality:
@@ -215,6 +226,15 @@ severity):
    *independent* verifier as a differential cross-check on `set.mm`
    (candidate: the author's `marnix/zigmmverify`, or `checkmm`); fuzz the
    parser (which is outside the TCB, so parser bugs yield wrong/malformed
-   statements, never false theorems); modernize the toolchain (the BuildHive/
-   CloudBees CI is defunct).
+   statements, never false theorems).
+
+ - **Distribute binaries?** Currently no need — CI does not keep build outputs.
+   If a need arises, decide how: e.g. split the trusted kernel (`mepk.kernel`)
+   into its own jar separate from `mepk.builtin` (parsers/DSL), so consumers
+   can depend on just the TCB; and/or publish to Maven Central (which would
+   also enable free Javadoc hosting via javadoc.io).
+
+ - **Mark versioned releases** (low priority; prerequisite for the above and
+   for javadoc.io): tag releases and drop the `-SNAPSHOT` for a released
+   version.
 

@@ -1,0 +1,96 @@
+# CI for MEPK.
+#
+# - `build` runs on every pushed commit (any branch) and on pull requests:
+#   it compiles and runs the tests with `mvn clean install` on JDK 17.
+#   The build output is intentionally NOT kept as an artifact (there is
+#   currently no need to distribute binaries; see the "distribute binaries?"
+#   to-do in README.md).
+#
+# - `deploy-docs` runs only for the default branch (master): it generates the
+#   Javadoc and publishes it to GitHub Pages at https://<owner>.github.io/MEPK/.
+#
+# Toolchain:
+#   - Java 17: selected via setup-java from the JDKs pre-installed in the
+#     runner image (no download). pom.xml uses maven.compiler.release=17, so
+#     any JDK >= 17 produces the same Java-17 class files (bytecode major 61).
+#   - Maven: the runner image's bundled Maven is used (no setup-maven download).
+#     The runner image is versioned and its contents are documented, which is
+#     the pin against surprises: as of runner image 20260907.300.1
+#     (ubuntu-24.04) the documented versions are Maven 3.9.16 and JDK 17.0.20.
+#     See https://github.com/actions/runner-images ubuntu readme.
+#     Caveat: ubuntu-latest rolls forward to newer image versions over time, so
+#     the bundled Maven may change (e.g. to 3.9.17+). The `mvn -version` step
+#     below logs the exact Maven/JDK used on every run, so any such drift is
+#     visible in the build log rather than a silent surprise. (For a harder pin
+#     one could set `runs-on: ubuntu-24.04`, but GitHub eventually retires old
+#     image labels, so that is not durable either.)
+#
+# Cost / caching notes:
+#   - The JDK is not downloaded (pre-installed in the runner image).
+#   - Maven itself is not downloaded (bundled in the runner image).
+#   - Maven *dependencies* (~/.m2/repository) are cached across runs via
+#     `cache: maven` on setup-java, keyed on the pom hash — the main time saver.
+
+name: CI
+
+on:
+  push:
+  pull_request:
+
+# Least-privilege by default; the docs job adds what it needs below.
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build and test (JDK 17, bundled Maven)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Show toolchain versions
+        run: mvn -version
+      - name: Build and test
+        run: mvn -B clean install
+
+  deploy-docs:
+    name: Publish Javadoc to GitHub Pages
+    # Only publish docs for the latest commit on the default branch.
+    if: github.ref == 'refs/heads/master'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write          # to deploy to Pages
+      id-token: write        # for the Pages OIDC deployment
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    # Avoid overlapping Pages deployments.
+    concurrency:
+      group: pages
+      cancel-in-progress: true
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Show toolchain versions
+        run: mvn -version
+      - name: Generate Javadoc
+        run: mvn -B javadoc:javadoc
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Javadoc output location for this Maven version.
+          path: target/reports/apidocs
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
