@@ -37,6 +37,13 @@
 		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
 		<maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
 		<maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
+		<!-- For Javadoc HTML generated via the `site` lifecycle (see <reporting>
+		     below); published to GitHub Pages by CI. -->
+		<maven-site-plugin.version>3.21.0</maven-site-plugin.version>
+		<maven-javadoc-plugin.version>3.11.2</maven-javadoc-plugin.version>
+		<!-- Pulled in implicitly by the `site` lifecycle; pin it so the build
+		     is not "malformed" (unversioned report plugin). -->
+		<maven-project-info-reports-plugin.version>3.9.0</maven-project-info-reports-plugin.version>
 	</properties>
 
 	<dependencies>
@@ -74,6 +81,21 @@
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>${maven-jar-plugin.version}</version>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-site-plugin</artifactId>
+					<version>${maven-site-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>${maven-javadoc-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-project-info-reports-plugin</artifactId>
+					<version>${maven-project-info-reports-plugin.version}</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -91,4 +113,20 @@
 			</plugin>
 		</plugins>
 	</build>
+
+	<!-- Javadoc is configured as a reporting plugin, which is the conventional
+	     Maven way to generate Javadoc HTML: it runs as part of the `site`
+	     lifecycle (`mvn site`), writing to target/site/apidocs. CI runs
+	     `mvn verify site` so the docs are generated (and any Javadoc error
+	     fails the build) in the same job that verifies the build; the HTML is
+	     then published to GitHub Pages. Versions are pinned via
+	     <pluginManagement> above. -->
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</reporting>
 </project>

@@ -1,13 +1,17 @@
 # CI for MEPK.
 #
 # - `build` runs on every pushed commit (any branch) and on pull requests:
-#   it compiles and runs the tests with `mvn clean install` on JDK 17.
-#   The build output is intentionally NOT kept as an artifact (there is
-#   currently no need to distribute binaries; see the "distribute binaries?"
-#   to-do in README.md).
+#   `mvn clean verify site` on JDK 17. `verify` compiles and runs the tests;
+#   `site` generates the Javadoc HTML (via the maven-javadoc-plugin <reporting>
+#   config in pom.xml), so a Javadoc error fails this job too. The compiled
+#   build output is intentionally NOT kept as an artifact (there is currently
+#   no need to distribute binaries; see the "distribute binaries?" to-do in
+#   README.md). On the default branch, the generated Javadoc HTML is uploaded
+#   as the GitHub Pages artifact.
 #
-# - `deploy-docs` runs only for the default branch (master): it generates the
-#   Javadoc and publishes it to GitHub Pages at https://<owner>.github.io/MEPK/.
+# - `deploy-docs` runs only for the default branch (master) and does NO Maven
+#   work: it just deploys the Pages artifact the build job produced, to
+#   https://<owner>.github.io/MEPK/.
 #
 # Toolchain:
 #   - Java 17: selected via setup-java from the JDKs pre-installed in the
@@ -43,7 +47,7 @@ permissions:
 
 jobs:
   build:
-    name: Build and test (JDK 17, bundled Maven)
+    name: Build, test and Javadoc (JDK 17, bundled Maven)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -55,8 +59,19 @@ jobs:
           cache: maven
       - name: Show toolchain versions
         run: mvn -version
-      - name: Build and test
-        run: mvn -B clean install
+      # `verify` builds and tests; `site` generates the Javadoc HTML (via the
+      # maven-javadoc-plugin <reporting> config in pom.xml) into
+      # target/site/apidocs. A Javadoc error therefore fails this build job.
+      - name: Build, test and generate Javadoc
+        run: mvn -B clean verify site
+      # Hand the already-generated Javadoc to the deploy job as the Pages
+      # artifact, so that job does no Maven work. Only needed on the default
+      # branch, which is the only place we publish.
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/master'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: target/site/apidocs
 
   deploy-docs:
     name: Publish Javadoc to GitHub Pages
@@ -74,23 +89,9 @@ jobs:
     concurrency:
       group: pages
       cancel-in-progress: true
+    # No checkout / JDK / Maven here: this job only deploys the Pages artifact
+    # that the build job already produced.
     steps:
-      - uses: actions/checkout@v5
-      - name: Set up JDK 17
-        uses: actions/setup-java@v6
-        with:
-          distribution: temurin
-          java-version: '17'
-          cache: maven
-      - name: Show toolchain versions
-        run: mvn -version
-      - name: Generate Javadoc
-        run: mvn -B javadoc:javadoc
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          # Javadoc output location for this Maven version.
-          path: target/reports/apidocs
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4

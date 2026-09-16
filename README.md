@@ -41,12 +41,14 @@ API documentation can be generated locally with:
     mvn javadoc:javadoc
 
 Continuous integration runs on GitHub Actions (`.github/workflows/ci.yml`):
-every pushed commit and pull request is built and tested on JDK 17 using the
-runner image's bundled Maven (documented as Maven 3.9.16 / JDK 17.0.20 in the
-current `ubuntu-24.04` image); each run logs the exact versions via
-`mvn -version`.  The Javadoc for the latest commit on the default branch is
-published to GitHub Pages at <https://marnix.github.io/MEPK/>.  (Build outputs
-are not distributed; see the "distribute binaries?" to-do below.)
+every pushed commit and pull request runs `mvn clean verify site` on JDK 17
+using the runner image's bundled Maven (documented as Maven 3.9.16 /
+JDK 17.0.20 in the current `ubuntu-24.04` image); each run logs the exact
+versions via `mvn -version`.  The `site` step generates the Javadoc, so a
+Javadoc error fails the build.  For the latest commit on the default branch,
+that already-generated Javadoc is published to GitHub Pages at
+<https://marnix.github.io/MEPK/> (the deploy job does no Maven work).  (Build
+outputs are not distributed; see the "distribute binaries?" to-do below.)
 
 
 To-do list for functionality:
