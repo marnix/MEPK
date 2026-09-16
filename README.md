@@ -1,5 +1,3 @@
-[![Build Status](https://buildhive.cloudbees.com/job/marnix/job/MEPK/badge/icon)](https://buildhive.cloudbees.com/job/marnix/job/MEPK/)
-
 MEPK: a Minimal Extensible Proof Kernel
 =======================================
 
@@ -11,8 +9,33 @@ License: GPLv3
 This is a Java library for building checked Metamath/Ghilbert-like proofs,
 which should be sufficient for verifying all Ghilbert and most Metamath proofs.
 
-See [the JavaDoc](https://buildhive.cloudbees.com/job/marnix/job/MEPK/javadoc/?mepk/package-summary.html)
-for more information.
+
+Building
+--------
+
+MEPK is a standard Maven project.  To compile, run the tests, and install the
+jar into your local repository:
+
+    mvn clean install
+
+To only compile and run the tests:
+
+    mvn clean test
+
+Requirements:
+
+ - **JDK 17 or newer** to build.  The build uses `maven.compiler.release=17`,
+   so it always produces **Java 17 class files** (bytecode major version 61)
+   no matter which JDK compiles it — the resulting jar runs on **Java 17 or
+   newer**.  Because `release` also restricts the compile-time API to Java 17,
+   building on a newer JDK cannot accidentally pull in newer-than-17 APIs.
+ - **Maven 3.6+** (any recent Maven 3).  All build plugins are pinned in
+   `pom.xml`, so the build is reproducible on any Maven-supported platform
+   (verified on Linux and Windows).
+
+API documentation can be generated locally with:
+
+    mvn javadoc:javadoc
 
 
 To-do list for functionality:
