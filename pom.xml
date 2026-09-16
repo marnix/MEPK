@@ -126,6 +126,19 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
+				<!-- Generate ONLY the main-code Javadoc ('javadoc' report).
+				     The documentation is for users of the library (public API
+				     + package-info philosophy); test classes are not part of
+				     that API, so the test-* reports are deliberately excluded.
+				     This also drops the spurious 'no comment' warnings from
+				     test sources. -->
+				<reportSets>
+					<reportSet>
+						<reports>
+							<report>javadoc</report>
+						</reports>
+					</reportSet>
+				</reportSets>
 			</plugin>
 		</plugins>
 	</reporting>
