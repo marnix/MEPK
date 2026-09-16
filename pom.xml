@@ -1,41 +1,93 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
 	<groupId>marnix</groupId>
 	<artifactId>mepk</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+
+	<name>MEPK</name>
+	<description>MEPK: a Minimal Extensible Proof Kernel, for trusted mathematical proofs in the style of Metamath and Ghilbert.</description>
+
 	<properties>
+		<!-- Encoding: keep builds byte-identical regardless of the platform's
+		     default charset (important across Windows/Linux/macOS). -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+		<!-- Single source of truth for the Java level. `release` (JEP 247)
+		     compiles against exactly this JDK's API, so building on a newer
+		     JDK cannot accidentally pull in newer APIs. 17 is the oldest LTS
+		     with broad, still-current free updates and full modern-toolchain
+		     support. -->
+		<maven.compiler.release>17</maven.compiler.release>
+
+		<!-- Reproducible builds: fixed timestamp for archive entries
+		     (https://maven.apache.org/guides/mini/guide-reproducible-builds.html). -->
+		<project.build.outputTimestamp>2026-09-16T00:00:00Z</project.build.outputTimestamp>
+
+		<!-- Pinned dependency/plugin versions (declared once, used below).
+		     NB: jparsec is intentionally kept at 2.1 — 3.x renamed the package
+		     (org.codehaus.jparsec -> org.jparsec) and changed the API, which
+		     would require source changes in MEPKParsers. Upgrading jparsec is a
+		     separate task, not part of build modernization. -->
+		<jparsec.version>2.1</jparsec.version>
+		<junit.version>4.13.2</junit.version>
+		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+		<maven-surefire-plugin.version>3.5.2</maven-surefire-plugin.version>
+		<maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
 	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.jparsec</groupId>
 			<artifactId>jparsec</artifactId>
-			<version>2.1</version>
-		</dependency>
-		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>1.8.5</version>
-			<scope>test</scope>
+			<version>${jparsec.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
 	<build>
+		<!-- Pin EVERY plugin that participates in the build so the result is
+		     identical on any Maven 3 install, regardless of that install's
+		     built-in default plugin versions. -->
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven-compiler-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>${maven-surefire-plugin.version}</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>${maven-jar-plugin.version}</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>2.3.2</version>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
