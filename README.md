@@ -240,6 +240,20 @@ severity):
    for javadoc.io): tag releases and drop the `-SNAPSHOT` for a released
    version.
 
+ - **Migrate tests JUnit 4 -> JUnit 5 (Jupiter).** The tests use JUnit 4.13.2,
+   which is the newest JUnit 4 but effectively frozen: 4.13.2 (Feb 2021) is the
+   last release and JUnit 4 gets only rare critical fixes — active development
+   is entirely on JUnit 5, which is the current industry standard (default in
+   Spring Boot, build-tool archetypes, and IDE wizards). Not urgent (4.13.2 is
+   stable, and JUnit 5's Vintage engine can even run JUnit 4 tests as-is), but
+   worth modernizing. This is a real API change, not cosmetic: swap the
+   dependency for `org.junit.jupiter:junit-jupiter` (test scope), then update
+   the 5 test classes — `@Before` -> `@BeforeEach`, `@Ignore` -> `@Disabled`,
+   `org.junit.Test`/`Assert` -> `org.junit.jupiter.api.Test`/`Assertions`.
+   Surefire 3.x (already pinned) runs Jupiter natively. The suite is small
+   (5 classes), so the migration is low-risk. Consider OpenRewrite's JUnit4->5
+   recipe to automate it.
+
  - **Verify/further optimize CI build time.** The `mvn clean verify site` step
    was ~30 s (of a ~40 s job), dominated by dependency/plugin *download*, not
    compilation. A Maven cache-seed step (`dependency:go-offline
